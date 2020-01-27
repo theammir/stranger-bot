@@ -24,6 +24,6 @@ async def on_message(message):
         if (str(message.author.roles[1]) == "Нефритовый воин"):
             await channel.send("https://discord.gg/T3EKbtc")
         else:
-            await channel.send("Ты можешь поделиться инвайтом только своего клана.)
+            await channel.send("Ты можешь поделиться инвайтом только своего клана.")
 
 bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xi8ckg.cSsBtA8xcNoWjHXodgJdV-tDV4Q')
