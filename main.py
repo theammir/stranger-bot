@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix = "ас")
-db = pickledb.load('db', False)
+#db = pickledb.load('db', False)
 
 @bot.event
 async def on_ready():
