@@ -15,10 +15,10 @@ async def on_message(message):
     if (message.author == "Гошасс" and message.content == "СУЙ"):
         await channel.send(file = discord.File('a1.jpg'))
         if (str(message.author) in db.getall()):
-                tempvalue = db.get(str(message.author))
-                tempvalue = int(tempvalue)
-                tempvalue += 1
-                db.set(str(message.author), str(tempvalue))
+            tempvalue = db.get(str(message.author))
+            tempvalue = int(tempvalue)
+            tempvalue += 1
+            db.set(str(message.author), str(tempvalue))
         elif (str(message.author) not in db.getall()):
             db.set(str(message.author), '1')
 
