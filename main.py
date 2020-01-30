@@ -9,6 +9,19 @@ db = pickledb.load('data.db', False)
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
 
+@bot.event
+async def on_message(message):
+    channel = bot.get_channel(message.channel.id)
+    if (message.author == "Гошасс" and message.content == "СУЙ"):
+        await channel.send(file = discord.File('a1.jpg'))
+        if (str(message.author) in db.getall()):
+                tempvalue = db.get(str(message.author))
+                tempvalue = int(tempvalue)
+                tempvalue += 1
+                db.set(str(message.author), str(tempvalue))
+        elif (str(message.author) not in db.getall()):
+            db.set(str(message.author), '1')
+
 
 @bot.group(name = "догма")
 async def truly(ctx, clan : str, _key : str):
@@ -27,7 +40,7 @@ async def truly(ctx, clan : str, _key : str):
     elif (clan in ["а", "a", "f",]):
         if (_key == "девиз" or _key == "ltdbp"):
             await ctx.send("Прах ты, и в прах возвратишься!")
-        elif (_key == 1 or ctx.message.author == "Гошасс" and ctx.message.content == "СУЙ"):
+        elif (_key == 1):
             await ctx.send(file = discord.File('a1.jpg'))
             if (str(ctx.message.author) in db.getall()):
                 tempvalue = db.get(str(ctx.message.author))
@@ -51,8 +64,7 @@ async def counting(ctx):
 
 @bot.command(name = "хелп")
 async def helping(ctx):
-    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\n(а = ашены, р = русские)\n"асдогма клан число" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма клан девиз" - отправляет девиз флота.')
-        
+    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\n(а = ашены, р = русские)\n"асдогма клан число" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма клан девиз" - отправляет девиз флота.')  
 
 
 bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.XjMD-A.PexcB1UaMP9tbr8UDBngY7oWJrM')
