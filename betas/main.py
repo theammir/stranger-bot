@@ -55,4 +55,4 @@ async def helping(ctx):
         
 
 
-bot.run('NjcyMTE1NzgyNDM5OTI3ODQw.XjLzfw.zEFzWfff180WiqJCPPyrhWRbKYw')
+bot.run('NjcyMTE1NzgyNDM5OTI3ODQw.XjGyng.1WS4S1IE75vVcO6Usq0K2odbJp8')
