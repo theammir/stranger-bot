@@ -7,7 +7,7 @@ db = pickledb.load('data.db', False)
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Game(name='маладой тэстовый бот'))
+    await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
 
 
 @bot.group(name = "догма")
