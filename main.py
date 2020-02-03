@@ -1,16 +1,21 @@
 import discord
-from discord.ext import commands 
+from discord.ext import commands
+from random import randint
 
 bot = commands.Bot(command_prefix = "ас")
 
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
+
 @bot.event
 async def on_message(message):
     channel = bot.get_channel(message.channel.id)
     if (str(message.author) == "Гошасс#8787" and message.content == "СУЙ"):
         await channel.send(file = discord.File('a1.jpg'))
+    elif (str(message.content) == "цвет пакажы"):
+        while (1==1):
+            await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
     await bot.process_commands(message)
 
 
@@ -52,4 +57,4 @@ async def helping(ctx):
 
 
 
-bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.XjMD-A.PexcB1UaMP9tbr8UDBngY7oWJrM')
+bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xjhvog.d45w3rOjQgKD2PtI5q7Lf1K0qB0')
