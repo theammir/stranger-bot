@@ -11,14 +11,17 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     channel = bot.get_channel(message.channel.id)
+    autor = str(message.author)
+    cantent = str(message.content)
+    
     #if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
-    if (str(message.content == "СУЙ")):
+    if (str(message.content) == "СУЙ"):
         if (str(message.author) in ["Гошасс#8787", "ΤχεΑμμιΡ#6109"]):
-            if (str(message.content) == "СУЙ"):
-                await channel.send(file = discord.File('a1.jpg'))
-    elif (str(message.content.lower()) == "ъуъ"):
-        if (str(message.author)[len(str(message.author)) - 4 : len(str(message.author)) - 1] == '5103'):
-            await ctx.send(file = discord.File('a2.jpg'))
+            await channel.send(file = discord.File('a1.jpg'))
+    elif (cantent.startswith("Ъуъ") or cantent.startswith('ъуъ') or cantent.startswith('ъУъ') or cantent.startswith('ъуЪ') or cantent.startswith("ЪУЪ") or cantent.startswith('ЪуЪ') or cantent.startswith("ЪУъ") or cantent.startswith('ъУЪ')
+          or cantent.endswith('Ъуъ') or cantent.endswith('ъуъ') or cantent.endswith('ЪУЪ') or cantent.endswith('ъУъ') or cantent.endswith('ъуЪ') or cantent.endswith('ЪУъ') or cantent.endswith('ъУЪ') or cantent.endswith('ЪуЪ')):
+        if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789']):
+            await channel.send(file = discord.File('a2.jpg'))
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
@@ -63,4 +66,4 @@ async def helping(ctx):
 
 
 
-bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xjhvog.d45w3rOjQgKD2PtI5q7Lf1K0qB0')
+bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xjw3wg.8o8Gd8cY6Rhc6bNuXCE4LbIG6Dw')
