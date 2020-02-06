@@ -18,7 +18,7 @@ async def on_message(message):
                 await channel.send(file = discord.File('a1.jpg'))
     elif (str(message.content.lower()) == "ъуъ"):
         if (str(message.author)[len(str(message.author)) - 4 : len(str(message.author)) - 1] == '5103'):
-            await ctx.send(file = discord.File('a1.jpg'))
+            await ctx.send(file = discord.File('a2.jpg'))
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
