@@ -11,7 +11,7 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     channel = bot.get_channel(message.channel.id)
-    if (str(message.author) == "Гошасс#8787" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
+    if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
         await channel.send(file = discord.File('a1.jpg'))
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
