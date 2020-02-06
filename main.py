@@ -20,7 +20,7 @@ async def on_message(message):
             await channel.send(file = discord.File('a1.jpg'))
     elif (cantent.startswith("Ъуъ") or cantent.startswith('ъуъ') or cantent.startswith('ъУъ') or cantent.startswith('ъуЪ') or cantent.startswith("ЪУЪ") or cantent.startswith('ЪуЪ') or cantent.startswith("ЪУъ") or cantent.startswith('ъУЪ')
           or cantent.endswith('Ъуъ') or cantent.endswith('ъуъ') or cantent.endswith('ЪУЪ') or cantent.endswith('ъУъ') or cantent.endswith('ъуЪ') or cantent.endswith('ЪУъ') or cantent.endswith('ъУЪ') or cantent.endswith('ЪуЪ')):
-        if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789']):
+        if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789', '8787']):
             await channel.send(file = discord.File('a2.jpg'))
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
