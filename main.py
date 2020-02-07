@@ -42,12 +42,14 @@ async def truly(ctx, clan : str, _key : str):
             await ctx.send("Бот просит передавать в качестве второго аргумента функции тип данных integer.\nПроще говоря, нужно писать число после буквы клана, а не вот это ваше \"" + _key + "\".")
             return 1 / 0 # Command ending
     if (clan in ["р", "p", "h",]):
-            await ctx.send("Ну тут пока пусто.")
+            await ctx.send("Союз распался в ~~1991~~ 2019.")
     elif (clan in ["а", "a", "f",]):
         if (_key == "девиз" or _key == "ltdbp"):
             await ctx.send("Прах ты, и в прах возвратишься!")
         elif (_key == 1):
             await ctx.send(file = discord.File('a1.jpg'))
+        elif (_key == 2):
+            await ctx.send(file = discord.File('a2.jpg'))
 
 
 @truly.command(name = "сет")
@@ -58,12 +60,26 @@ async def setting(ctx):
 
 @bot.command(name = "хелп")
 async def helping(ctx):
-    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\n(а = ашены, р = русские)\n"асдогма клан число" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма клан девиз" - отправляет девиз флота.')  
+    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\n"асдогма а число" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица @ник" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.')  
+
+
+@bot.command(name = "птица")
+async def fetch(ctx, person : discord.Member):
+    if (str(ctx.message.author) == str(person)):
+        await ctx.send("Вы не можете давать роль сами себе или у вас нет соответствующего разрешения")
+        pass
+    guild = bot.get_guild(person.guild.id)
+    roles = ''
+    for element in ctx.message.author.roles:
+        roles += str(element)
+    if ('Обучатор' not in roles):
+        await ctx.send('Нужно быть обучатором, что-бы пользоваться этой командой')
+    else:
+        await person.add_roles(guild.get_role(670649392398729270), reason=None)
+        
 
 
 
 
 
-
-
-bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xjw3wg.8o8Gd8cY6Rhc6bNuXCE4LbIG6Dw')
+bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xj12Ew.27tDAS5PeBDBQ4On5KH2zb5NNRc')
