@@ -72,7 +72,7 @@ async def fetch(ctx, person : discord.Member):
     roles = ''
     for element in ctx.message.author.roles:
         roles += str(element)
-    if ('Обучатор' not in roles):
+    if ('обучатор' not in roles):
         await ctx.send('Нужно быть обучатором, что-бы пользоваться этой командой')
     else:
         await person.add_roles(guild.get_role(670649392398729270), reason=None)
