@@ -16,7 +16,7 @@ async def on_message(message):
     
     #if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
     if (str(message.content) == "СУЙ"):
-        if (str(message.author) in ["Гошасс#8787", "ΤχεΑμμιΡ#6109"]):
+        if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
             await channel.send(file = discord.File('a1.jpg'))
     elif (cantent.startswith("Ъуъ") or cantent.startswith('ъуъ') or cantent.startswith('ъУъ') or cantent.startswith('ъуЪ') or cantent.startswith("ЪУЪ") or cantent.startswith('ЪуЪ') or cantent.startswith("ЪУъ") or cantent.startswith('ъУЪ') or cantent.startswith('iyi')
           or cantent.endswith('Ъуъ') or cantent.endswith('ъуъ') or cantent.endswith('ЪУЪ') or cantent.endswith('ъУъ') or cantent.endswith('ъуЪ') or cantent.endswith('ЪУъ') or cantent.endswith('ъУЪ') or cantent.endswith('ЪуЪ') or cantent.endswith('iyi')):
@@ -76,6 +76,7 @@ async def fetch(ctx, person : discord.Member):
         await ctx.send('Нужно быть обучатором, что-бы пользоваться этой командой')
     else:
         await person.add_roles(guild.get_role(670649392398729270), reason=None)
+        await person.remove_roles(guild.get_role(670719148699156511), reason=None)
         
 
 
