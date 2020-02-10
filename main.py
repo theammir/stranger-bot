@@ -1,9 +1,12 @@
 import discord
 from discord.ext import commands
 from random import randint
+from tinydb import TinyDB, Query
 
 bot = commands.Bot(command_prefix = "ас")
-
+db = TinyDB('data.json')
+SUI = Query()
+dictwithsui = []
 
 @bot.event
 async def on_ready():
@@ -11,6 +14,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+    global dictwithsui
     channel = bot.get_channel(message.channel.id)
     autor = str(message.author)
     cantent = str(message.content)
@@ -18,17 +22,44 @@ async def on_message(message):
     #if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
     if (str(message.content) == "СУЙ"):
         if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
+            dictwithsui = db.search(SUI.name == str(message.author))
+            if (dictwithsui == []):
+                db.insert({'name' : str(message.author), 'count' : 1})
+                dictwithsui = db.search(SUI.name == str(message.author))
+                dictwithsui = dictwithsui[0]['count']
+            else:
+                dictwithsui = dictwithsui[0]['count']
+                db.update({'count' : dictwithsui + 1}, SUI.name == str(message.author))
             await channel.send(file = discord.File('a1.jpg'))
     elif (cantent.startswith("Ъуъ") or cantent.startswith('ъуъ') or cantent.startswith('ъУъ') or cantent.startswith('ъуЪ') or cantent.startswith("ЪУЪ") or cantent.startswith('ЪуЪ') or cantent.startswith("ЪУъ") or cantent.startswith('ъУЪ') or cantent.startswith('iyi')
           or cantent.endswith('Ъуъ') or cantent.endswith('ъуъ') or cantent.endswith('ЪУЪ') or cantent.endswith('ъУъ') or cantent.endswith('ъуЪ') or cantent.endswith('ЪУъ') or cantent.endswith('ъУЪ') or cantent.endswith('ЪуЪ') or cantent.endswith('iyi')):
         if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789', '8787']):
-            await channel.send(file = discord.File('a2.jpg'))
+            dictwithsui = db.search(SUI.name == str(message.author))
+            if (dictwithsui == []):
+                db.insert({'name' : str(message.author), 'count' : 1})
+                dictwithsui = db.search(SUI.name == str(message.author))
+                dictwithsui = dictwithsui[0]['count']
+            else:
+                dictwithsui = dictwithsui[0]['count']
+                db.update({'count' : dictwithsui + 1}, SUI.name == str(message.author))
+        await channel.send(file = discord.File('a2.jpg'))
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
     await bot.process_commands(message)
 
 
+
+@bot.command(name = 'каунт')
+async def count(ctx):
+    speech = ''
+    for suvatel in db.all():
+        speech += str(suvatel['name']) + ' сунул ' + str(suvatel['count']) + ':cucumber:!\n'
+    try:
+        await ctx.send(speech)
+    except:
+        await ctx.send('По видимому, база данных пуста :bigboom:\nНу, либо что-то опять в который раз пошло не так ;/')
+    
 
 
 @bot.group(aliases = ["догма", 'Догма', "Домга", "домга"])
