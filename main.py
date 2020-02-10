@@ -4,6 +4,7 @@ from random import randint
 
 bot = commands.Bot(command_prefix = "ас")
 
+
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
@@ -26,6 +27,7 @@ async def on_message(message):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
     await bot.process_commands(message)
+
 
 
 
@@ -79,6 +81,30 @@ async def fetch(ctx, person : discord.Member):
         await person.remove_roles(guild.get_role(670719148699156511), reason=None)
         
 
+@bot.command(name = 'ребут')
+async def reboot(reconnect = True):
+    await bot.close()
+    while (bot.is_closed()):
+        await bot.connect()
+
+@bot.command(name = 'погости')
+async def guesting(ctx, person : discord.Member):
+    if (str(ctx.message.author) == str(person)):
+        await ctx.send('Вы не можете изменять роли самому себе.')
+        pass
+    guild = bot.get_guild(person.guild.id)
+    roles = ''
+    required_roles = ['обучатор', 'совет флота', 'адмирал', 'вице адмирал', 'доверенный']
+    for element in ctx.message.author.roles:
+        roles += str(element)
+    roles = roles.lower()
+    for element in required_roles:
+        if (element in roles):
+            await person.remove_roles(guild.get_role(670649392398729270), reason = None)
+            await person.add_roles(guild.get_role(670719148699156511), reason = None)
+        else:
+            await ctx.send('Вы не имеете права на изменение ролей этого человека.')
+            break
 
 
 
