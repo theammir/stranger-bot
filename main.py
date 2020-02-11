@@ -176,4 +176,4 @@ async def guesting(ctx, person : discord.Member):
 
 
 
-bot.run('NjcyMTE1NzgyNDM5OTI3ODQw.XkJ0bQ.mKZnDhNJztJIEmhq33lJ57Bhdfc')
+bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.XkKF2w.h6r_sfTu50dFFugcQhhj5bcAAIY')
