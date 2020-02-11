@@ -7,6 +7,38 @@ bot = commands.Bot(command_prefix = "ас")
 db = TinyDB('data.json')
 SUI = Query()
 dictwithsui = []
+suislist = []
+nameslist = []
+counter = 0
+
+def isSorted(): # Returns True or False if the array is sorted or it isn't
+    global counter
+    counter = 0
+    for element in suislist: # [-5, 5, -10, 1, 25]
+        if (counter != len(suislist) - 1): # For no "index out of range" exception
+            if (suislist[counter] < suislist[counter + 1]): # Comparing of two numbers
+                return False
+                break
+            else:
+                counter += 1
+        elif (counter == len(suislist) - 1):
+            return True
+
+async def sort():
+    for i in db.all():
+        suislist.append(i['count'])
+        nameslist.append(i['name'])
+    if (len(db.all()) > 1):
+        while (isSorted()):
+            for i in range(0, len(suislist) - 1):
+                if (temp[i] < temp[i + 1]):
+                    suislist[i], suislist[i + 1] = suislist[1 + 1], suislist[i]
+                    nameslist[i], nameslist[i + 1] = nameslist[i + 1], nameslist[i]
+                else:
+                    pass
+    else:
+        return False
+    
 
 @bot.event
 async def on_ready():
@@ -52,13 +84,17 @@ async def on_message(message):
 
 @bot.command(name = 'каунт')
 async def count(ctx):
-    speech = ''
-    for suvatel in db.all():
-        speech += str(suvatel['name']) + ' сунул ' + str(suvatel['count']) + ':cucumber:!\n'
-    try:
-        await ctx.send(speech)
-    except:
-        await ctx.send('По видимому, база данных пуста :bigboom:\nНу, либо что-то опять в который раз пошло не так ;/')
+    global suislist
+    global nameslist
+    if (await sort() == False):
+        await ctx.send(nameslist[0] + ' сунул ' + str(suislist[0]) + ":cucumber:!")
+    else:
+        for i in range(0, len(suislist) - 1):
+            speech += nameslist[i] + ' сунул ' + str(suislist[i]) + ':cucumber:!\n'
+        try:
+            await ctx.send(speech)
+        except:
+            await ctx.send('По видимому, база данных пуста :bigboom:\nНу, либо что-то опять в который раз пошло не так ;/')
     
 
 
@@ -140,4 +176,4 @@ async def guesting(ctx, person : discord.Member):
 
 
 
-bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.Xj12Ew.27tDAS5PeBDBQ4On5KH2zb5NNRc')
+bot.run('NjcyMTE1NzgyNDM5OTI3ODQw.XkJ0bQ.mKZnDhNJztJIEmhq33lJ57Bhdfc')
