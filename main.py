@@ -86,6 +86,7 @@ async def on_message(message):
 async def count(ctx):
     global suislist
     global nameslist
+    speech = ''
     if (await sort() == False):
         await ctx.send(nameslist[0] + ' сунул ' + str(suislist[0]) + ":cucumber:!")
     else:
