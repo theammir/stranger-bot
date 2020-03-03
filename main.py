@@ -1,8 +1,11 @@
 import discord
 from discord.ext import commands
 from random import randint
+import requests as rq
 from tinydb import TinyDB, Query
-
+ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xl5srA.AIm-zDe-A6YvCElKQshQqoCkJ0c'
+BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
+BFTAE = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
 bot = commands.Bot(command_prefix = "ас")
 db = TinyDB('data.json')
 SUI = Query()
@@ -10,35 +13,10 @@ dictwithsui = []
 suislist = []
 nameslist = []
 counter = 0
-
-def isSorted(): # Returns True or False if the array is sorted or it isn't
-    global counter
-    counter = 0
-    for element in suislist: # [-5, 5, -10, 1, 25]
-        if (counter != len(suislist) - 1): # For no "index out of range" exception
-            if (suislist[counter] < suislist[counter + 1]): # Comparing of two numbers
-                return False
-                break
-            else:
-                counter += 1
-        elif (counter == len(suislist) - 1):
-            return True
-
-async def sort():
-    for i in db.all():
-        suislist.append(i['count'])
-        nameslist.append(i['name'])
-    if (len(db.all()) > 1):
-        while (isSorted()):
-            for i in range(0, len(suislist) - 1):
-                if (temp[i] < temp[i + 1]):
-                    suislist[i], suislist[i + 1] = suislist[1 + 1], suislist[i]
-                    nameslist[i], nameslist[i + 1] = nameslist[i + 1], nameslist[i]
-                else:
-                    pass
-    else:
-        return False
-    
+_key = ''
+if (db.search(SUI.image == 'a1.jpg') == []):
+    db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
+    db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
 
 @bot.event
 async def on_ready():
@@ -54,83 +32,73 @@ async def on_message(message):
     #if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
     if (str(message.content) == "СУЙ"):
         if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
-            dictwithsui = db.search(SUI.name == str(message.author))
-            if (dictwithsui == []):
-                db.insert({'name' : str(message.author), 'count' : 1})
-                dictwithsui = db.search(SUI.name == str(message.author))
-                dictwithsui = dictwithsui[0]['count']
-            else:
-                dictwithsui = dictwithsui[0]['count']
-                db.update({'count' : dictwithsui + 1}, SUI.name == str(message.author))
             await channel.send(file = discord.File('a1.jpg'))
     elif (cantent.startswith("Ъуъ") or cantent.startswith('ъуъ') or cantent.startswith('ъУъ') or cantent.startswith('ъуЪ') or cantent.startswith("ЪУЪ") or cantent.startswith('ЪуЪ') or cantent.startswith("ЪУъ") or cantent.startswith('ъУЪ') or cantent.startswith('iyi')
           or cantent.endswith('Ъуъ') or cantent.endswith('ъуъ') or cantent.endswith('ЪУЪ') or cantent.endswith('ъУъ') or cantent.endswith('ъуЪ') or cantent.endswith('ЪУъ') or cantent.endswith('ъУЪ') or cantent.endswith('ЪуЪ') or cantent.endswith('iyi')):
         if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789', '8787']):
-            dictwithsui = db.search(SUI.name == str(message.author))
-            if (dictwithsui == []):
-                db.insert({'name' : str(message.author), 'count' : 1})
-                dictwithsui = db.search(SUI.name == str(message.author))
-                dictwithsui = dictwithsui[0]['count']
-            else:
-                dictwithsui = dictwithsui[0]['count']
-                db.update({'count' : dictwithsui + 1}, SUI.name == str(message.author))
-        await channel.send(file = discord.File('a2.jpg'))
+            await channel.send(file = discord.File('a2.jpg'))
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
     await bot.process_commands(message)
-
-
-
-@bot.command(name = 'каунт')
-async def count(ctx):
-    global suislist
-    global nameslist
-    speech = ''
-    if (await sort() == False):
-        await ctx.send(nameslist[0] + ' сунул ' + str(suislist[0]) + ":cucumber:!")
-    else:
-        for i in range(0, len(suislist) - 1):
-            speech += nameslist[i] + ' сунул ' + str(suislist[i]) + ':cucumber:!\n'
-        try:
-            await ctx.send(speech)
-        except:
-            await ctx.send('По видимому, база данных пуста :bigboom:\nНу, либо что-то опять в который раз пошло не так ;/')
     
 
 
-@bot.group(aliases = ["догма", 'Догма', "Домга", "домга"])
-async def truly(ctx, clan : str, _key : str):
-    clan = clan.lower()
-    _key = _key.lower()
-    try:
-        _key = int(_key)
-    except:
-        if (_key == "девиз" or _key == "ltdbp"):
-            pass
+@bot.command(name = 'догма')
+async def dogme(ctx, clan : str, key : str):
+    _key = key
+    if (clan.lower() in ('a', 'а', 'ф', 'f',)):
+        if (_key.lower() == 'девиз'):
+            await ctx.send('Прах ты, и в прах возвратишься!')
         else:
-            await ctx.send("Бот просит передавать в качестве второго аргумента функции тип данных integer.\nПроще говоря, нужно писать число после буквы клана, а не вот это ваше \"" + _key + "\".")
-            return 1 / 0 # Command ending
-    if (clan in ["р", "p", "h",]):
-            await ctx.send("Союз распался в ~~1991~~ 2019.")
-    elif (clan in ["а", "a", "f",]):
-        if (_key == "девиз" or _key == "ltdbp"):
-            await ctx.send("Прах ты, и в прах возвратишься!")
-        elif (_key == 1):
-            await ctx.send(file = discord.File('a1.jpg'))
-        elif (_key == 2):
-            await ctx.send(file = discord.File('a2.jpg'))
+            dictionary = db.search(SUI._key == _key)
+            try:
+                img = dictionary[0]['image']
+            except:
+                pass
+            if (dictionary != []):
+                try:
+                    await ctx.send(dictionary[0]['message'])
+                except:
+                    try:
+                        await ctx.send(file = discord.File(img))
+                    except:
+                        pass
+            else:
+                await ctx.send("Бот нифига не нашел")
+    elif (clan.lower() in ['р', 'p', 'з', 'h']):
+        await ctx.send("Союз распался в ~~1991~~ 2019.")
 
 
-@truly.command(name = "сет")
-async def setting(ctx):
-    await ctx.send("Yess!")
+@bot.command(name = 'сет')
+async def sett(ctx, key : str, *, args = []):
+    _key = key
+    if (key == '1' or key == '2'):
+        await ctx.send("Изначальные догмы не трогать!")
+        return
+    for i in db.all():
+        if (i['_key'] == key):
+            await ctx.send('Догма под таким номером уже существует.')
+            return
+    message = ''.join(args)
+    if (message.startswith('https://')):
+        link = message.split(' ')[0]
+        message = ' '.join(message.split(' ')[1:])
+        html = rq.get(link, stream = True)
+
+        with open(f'a{_key}.png', 'bw') as f:
+            for chunk in html.iter_content(8192):
+                f.write(chunk)
+        db.insert({'_key' : _key, 'message' : message, 'image' : f'a{_key}.png'})
+    else:
+        db.insert({'_key' : _key, 'message' : message})
+            
 
 
 
 @bot.command(name = "хелп")
 async def helping(ctx):
-    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\n"асдогма а число" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица @ник" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.\n"аспогости @ник" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.')  
+    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\nЗа помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF\n"асдогма а число" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица @ник" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.\n"аспогости @ник" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.\nассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально) - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.')  
 
 
 @bot.command(name = "птица")
@@ -177,4 +145,4 @@ async def guesting(ctx, person : discord.Member):
 
 
 
-bot.run('NjcwNjkyOTAwNTkzNTk4NTMw.XkKF2w.h6r_sfTu50dFFugcQhhj5bcAAIY')
+bot.run(ASTRANGER)
