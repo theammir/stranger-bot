@@ -54,15 +54,16 @@ async def dogme(ctx, clan : str, key : str):
             dictionary = db.search(SUI._key == _key)
             try:
                 img = dictionary[0]['image']
-            except:
-                pass
+            except Exception as e:
+                await ctx.send(str(e))
             if (dictionary != []):
                 try:
                     await ctx.send(dictionary[0]['message'])
-                except:
-                    try:
-                        await ctx.send(file = discord.File(img))
-                    except:
+                except Exception as e:
+                    pass
+                try:
+                    await ctx.send(file = discord.File(img))
+                except Exception as e:
                         pass
             else:
                 await ctx.send("Бот нифига не нашел")
