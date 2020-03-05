@@ -52,21 +52,19 @@ async def dogme(ctx, clan : str, key : str):
             await ctx.send('Прах ты, и в прах возвратишься!')
         else:
             dictionary = db.search(SUI._key == _key)
+        if (dictionary != []):
+            try:
+                await ctx.send(dictionary[0]['message'])
+            except Exception as e:
+                #await ctx.send(e)
+                pass
             try:
                 img = dictionary[0]['image']
+                await ctx.send(file = discord.File(img))
             except Exception as e:
-                await ctx.send(str(e))
-            if (dictionary != []):
-                try:
-                    await ctx.send(dictionary[0]['message'])
-                except Exception as e:
-                    pass
-                try:
-                    await ctx.send(file = discord.File(img))
-                except Exception as e:
-                        pass
-            else:
-                await ctx.send("Бот нифига не нашел")
+                pass
+        else:
+            await ctx.send("Бот нифига не нашел")
     elif (clan.lower() in ['р', 'p', 'з', 'h']):
         await ctx.send("Союз распался в ~~1991~~ 2019.")
 
@@ -84,19 +82,49 @@ async def sett(ctx, key : str, *, args = []):
     message = ''.join(args)
     if (message.startswith('https://')):
         link = message.split(' ')[0]
+        extention = '.gif' if link.endswith('.gif') else '.png'
         message = ' '.join(message.split(' ')[1:])
         html = rq.get(link, stream = True)
 
-        with open(f'a{_key}.png', 'bw') as f:
+        with open(f'a{_key}{extention}', 'bw') as f:
             for chunk in html.iter_content(8192):
                 f.write(chunk)
-        db.insert({'_key' : _key, 'message' : message, 'image' : f'a{_key}.png'})
+        db.insert({'_key' : _key, 'message' : message, 'image' : f'a{_key}{extention}'})
     else:
         db.insert({'_key' : _key, 'message' : message})
             
+@bot.command(name = 'лист')
+async def dlist(ctx):
+    allbase = db.all()
+    r = 1
+    page = 1
+    total_pages = len(allbase) // 5 + 1
+    embed = discord.Embed(title="Список догм", description=f"Страница {page}", color=0x00ff00)
+    for i in range(len(allbase)):
+        r += 1
+        string = f'Key: {allbase[i]["_key"]} - Message: {allbase[i]["message"]}'
+        embed.add_field(name = f'{str(r)}:', value = string, inline = False)
+    await ctx.send(embed = embed)
+
+@bot.command(name = 'эдит')
+async def asedit(ctx, num : int, mode : str, *, value = ''):
+    dogmes = db.all()
+    if (mode == 'k'):
+        db.update({'_key' : value}, SUI._key == dogmes[num - 1]['_key'])
+    elif (mode == 'm'):
+        db.update({'message' : ' '.join(value)}, SUI._key == dogmes[num - 1]['_key'])
+        await ctx.send(dogmes[num - 1]['message'])
+    elif (mode == 'd'):
+        db.remove(SUI._key == num)
+    
 
 
 
+
+
+
+
+    
 @bot.command(name = "хелп")
 async def helping(ctx):
     await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\nЗа помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF\n"асдогма а <число>" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица <@ник>" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.\n"аспогости <@ник>" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.\n"ассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально)" - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.')  
