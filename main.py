@@ -1,12 +1,17 @@
 import discord
 from discord.ext import commands
-from random import randint
+from random import randint, choice
 import requests as rq
 from tinydb import TinyDB, Query
+
+async def get_pre(bot, message):
+  return ['ас', 'Ас', 'АС', 'аС']  # or a list, ["pre1","pre2"]
+
+bot = commands.Bot(command_prefix = get_pre)
+
 ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xl5srA.AIm-zDe-A6YvCElKQshQqoCkJ0c'
 BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
 BFTAE = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
-bot = commands.Bot(command_prefix = "ас")
 db = TinyDB('data.json')
 SUI = Query()
 dictwithsui = []
@@ -24,11 +29,13 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    global dictwithsui
     channel = bot.get_channel(message.channel.id)
     autor = str(message.author)
     cantent = str(message.content)
-    
+    if (str(message.content).startswith('//')):
+        _key = str(message.content)[2:]
+        ctx = await bot.get_context(message)
+        await dogme(ctx, clan = 'a', key = _key)
     #if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
     if (str(message.content) == "СУЙ"):
         if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
@@ -96,7 +103,7 @@ async def sett(ctx, key : str, *, args = []):
 @bot.command(name = 'лист')
 async def dlist(ctx):
     allbase = db.all()
-    r = 1
+    r = -1
     page = 1
     total_pages = len(allbase) // 5 + 1
     embed = discord.Embed(title="Список догм", description=f"Страница {page}", color=0x00ff00)
@@ -117,7 +124,23 @@ async def asedit(ctx, num : int, mode : str, *, value = ''):
     elif (mode == 'd'):
         db.remove(SUI._key == num)
     
-
+@bot.command(aliases = ['радуга', 'лгбт'])
+async def rainbow(ctx):
+    randkey = choice(db.all())['_key']
+    if (randkey == 'нсфв'):
+        randkey = choice(db.all())['_key']
+    dictionary = db.search(SUI._key == randkey)
+    if (dictionary != []):
+        try:
+            await ctx.send(dictionary[0]['message'])
+        except Exception as e:
+            #await ctx.send(e)
+            pass
+        try:
+            img = dictionary[0]['image']
+            await ctx.send(file = discord.File(img))
+        except Exception as e:
+            pass
 
 
 
