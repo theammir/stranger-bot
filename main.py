@@ -51,78 +51,82 @@ async def on_message(message):
     
 
 
-@bot.command(name = 'догма')
+@bot.group(name = 'догма')
 async def dogme(ctx, clan : str, key : str):
     _key = key
-    if (clan.lower() in ('a', 'а', 'ф', 'f',)):
-        if (_key.lower() == 'девиз'):
-            await ctx.send('Прах ты, и в прах возвратишься!')
-        else:
-            dictionary = db.search(SUI._key == _key)
-        if (dictionary != []):
-            try:
-                await ctx.send(dictionary[0]['message'])
-            except Exception as e:
-                #await ctx.send(e)
-                pass
-            try:
-                img = dictionary[0]['image']
-                await ctx.send(file = discord.File(img))
-            except Exception as e:
-                pass
-        else:
-            await ctx.send("Бот нифига не нашел")
-    elif (clan.lower() in ['р', 'p', 'з', 'h']):
-        await ctx.send("Союз распался в ~~1991~~ 2019.")
+    dictionary = db.search(SUI._key == _key)
+    try:
+        img = dictionary[0]['image']
+    except:
+        pass
+    if (dictionary != []):
+        try:
+            await ctx.send(dictionary[0]['message'])
+        except:
+            pass
+        try:
+            await ctx.send(file = discord.File(img))
+        except:
+            pass
+    else:
+        await ctx.send("Бот нифига не нашел")
 
+@bot.command(name = 'рекавер')
+async def recover(ctx):
+    roles = ''
+    for role in ctx.message.author.roles:
+        roles += str(role)
+    if ('ЧСВ' not in roles):
+        return
+    channel = bot.get_channel(685840409116540930)
+    async for msg in channel.history(limit = 500):
+        if (str(msg.content) != 'Догма с таким ключом уже существует :teahah:'):
+          content = str(msg.content).split(' ')
+          content = content[1:]
+          _key = content[0]
+          content = content[1:]
+          await tset(ctx, _key, content)
+    await ctx.send('~~Вирусная база данных успешно обновлена!~~')
 
 @bot.command(name = 'сет')
-async def sett(ctx, key : str, *, args = []):
-    _key = key
-    if (key == '1' or key == '2'):
-        await ctx.send("Изначальные догмы не трогать!")
+async def tset(ctx, _key : str, *content):
+    channel = bot.get_channel(685840409116540930)
+    await channel.send(str(ctx.message.content))
+    for i in _key:
+        if (i in ['*', '/', '|', '\\',]):
+            await ctx.send('Я запрещаю вам использовать спецсимволы!')
+            return
+    listContent = []
+    for i in content:
+        listContent.append(i)
+    if (_key == '1' or _key == '2'):
+        await ctx.send('Нельзя изменять изначальные догмы.')
         return
     for i in db.all():
-        if (i['_key'] == key):
-            await ctx.send('Догма под таким номером уже существует.')
+        if (i['_key'] == _key):
+            await ctx.send('Догма с таким ключом уже существует :teahah:')
             return
-    message = ''.join(args)
-    if (message.startswith('https://')):
-        link = message.split(' ')[0]
+    listContent[0] = ''.join(listContent[0])
+    strContent = ' '.join(listContent)
+    if (strContent.startswith('https://')):
+        link = listContent[0]
         extention = '.gif' if link.endswith('.gif') else '.png'
-        message = ' '.join(message.split(' ')[1:])
+        message = ' '.join(listContent[1:])
+        
         html = rq.get(link, stream = True)
-
         with open(f'a{_key}{extention}', 'bw') as f:
             for chunk in html.iter_content(8192):
                 f.write(chunk)
         db.insert({'_key' : _key, 'message' : message, 'image' : f'a{_key}{extention}'})
     else:
+        message = ' '.join(listContent)
         db.insert({'_key' : _key, 'message' : message})
             
 @bot.command(name = 'лист')
 async def dlist(ctx):
     allbase = db.all()
-    r = -1
-    page = 1
-    total_pages = len(allbase) // 5 + 1
-    embed = discord.Embed(title="Список догм", description=f"Страница {page}", color=0x00ff00)
-    for i in range(len(allbase)):
-        r += 1
-        string = f'Key: {allbase[i]["_key"]} - Message: {allbase[i]["message"]}'
-        embed.add_field(name = f'{str(r)}:', value = string, inline = False)
-    await ctx.send(embed = embed)
-
-@bot.command(name = 'эдит')
-async def asedit(ctx, num : int, mode : str, *, value = ''):
-    dogmes = db.all()
-    if (mode == 'k'):
-        db.update({'_key' : value}, SUI._key == dogmes[num - 1]['_key'])
-    elif (mode == 'm'):
-        db.update({'message' : ' '.join(value)}, SUI._key == dogmes[num - 1]['_key'])
-        await ctx.send(dogmes[num - 1]['message'])
-    elif (mode == 'd'):
-        db.remove(SUI._key == num)
+    for i in allbase:
+        await ctx.send(f'Key: {i["_key"]}, Message: {i["message"]}')
     
 @bot.command(aliases = ['радуга', 'лгбт'])
 async def rainbow(ctx):
@@ -142,7 +146,17 @@ async def rainbow(ctx):
         except Exception as e:
             pass
 
-
+@bot.command('делит')
+async def delete(ctx, _key):
+    roles = ''
+    for role in ctx.message.author.roles:
+        roles += str(role)
+    if ('Член ботского совета' in roles):
+        db.remove(SUI._key == _key)
+        async for i in bot.get_channel(685840409116540930).history(limit = 500):
+            if (str(i.content).lower().startswith(f'ассет {_key}')):
+                await i.delete()
+                return
 
 
 
