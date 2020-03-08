@@ -25,8 +25,20 @@ if (db.search(SUI.image == 'a1.jpg') == []):
 
 @bot.event
 async def on_ready():
+    channel = bot.get_channel(671432725109932045)
     await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
+    guild = bot.get_guild(671432722236964884)
+    COLOURER = 673966918281199616
+    SOVIET = 685813138301780027
+    CREATOR = 676388955985412116
+    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    await guild.get_role(COLOURER).edit(colour = colour, reason = None)
+    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    await guild.get_role(SOVIET).edit(colour = colour, reason = None)
+    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    await guild.get_role(CREATOR).edit(colour = colour, reason = None)
 
+    
 @bot.event
 async def on_message(message):
     channel = bot.get_channel(message.channel.id)
