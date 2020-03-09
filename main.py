@@ -240,4 +240,4 @@ async def guesting(ctx, person : discord.Member):
 
 
 
-bot.run(BSTRANGER)
+bot.run(ASTRANGER)
