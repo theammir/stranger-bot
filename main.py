@@ -104,7 +104,7 @@ async def recover(ctx):
               content = content[1:]
               await tset(ctx, _key, content)
         except Exception as e:
-            await ctx.send('Произошла ошибка при копироввании догмы!')
+            await ctx.send('Произошла ошибка при копироввании догмы!:')
             await ctx.send(str(e))
     await ctx.send('~~Вирусная база данных успешно обновлена!~~')
     recovering = False
@@ -130,11 +130,16 @@ async def tset(ctx, _key : str, *content):
             if (recovering == False):
                 await ctx.send('Догма с таким ключом уже существует :teahah:')
                 return
-    listContent[0] = ''.join(listContent[0])
+    listContent[0] = ' '.join(listContent[0])
     strContent = ' '.join(listContent)
+    print(str(listContent))
     if (strContent.startswith('https://')):
         link = listContent[0]
-        extention = '.gif' if link.endswith('.gif') else '.png'
+        extention = '.png'
+        if (link.endswith('.jpg') or link.endswith('.jpeg')):
+            extention = '.jpg'
+        elif (link.endswith('.png')):
+            extention = '.png'
         message = ' '.join(listContent[1:])
         
         html = rq.get(link, stream = True)
@@ -235,4 +240,4 @@ async def guesting(ctx, person : discord.Member):
 
 
 
-bot.run(ASTRANGER)
+bot.run(BSTRANGER)
