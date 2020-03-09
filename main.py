@@ -94,8 +94,8 @@ async def recover(ctx):
     if ('Администратор догм' not in roles):
         return
     channel = bot.get_channel(685840409116540930)
-    async for msg in channel.history(limit = 500):
     await ctx.send('Начинаю восстановление догм.')
+    async for msg in channel.history(limit = 500):
         try:
             if (str(msg.content) != 'Догма с таким ключом уже существует :teahah:'):
               content = str(msg.content).split(' ')
