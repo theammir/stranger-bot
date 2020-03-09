@@ -14,11 +14,9 @@ BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
 BFTAE = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
 db = TinyDB('data.json')
 SUI = Query()
-dictwithsui = []
-suislist = []
-nameslist = []
 counter = 0
 _key = ''
+recovering = False
 if (db.search(SUI.image == 'a1.jpg') == []):
     db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
     db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
@@ -31,12 +29,15 @@ async def on_ready():
     COLOURER = 673966918281199616
     SOVIET = 685813138301780027
     CREATOR = 676388955985412116
+    ADMIN = 676389164727402517
     colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
     await guild.get_role(COLOURER).edit(colour = colour, reason = None)
     colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
     await guild.get_role(SOVIET).edit(colour = colour, reason = None)
     colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
     await guild.get_role(CREATOR).edit(colour = colour, reason = None)
+    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    await guild.get_role(ADMIN).edit(colour = colour, reason = None)
 
     
 @bot.event
@@ -85,25 +86,35 @@ async def dogme(ctx, clan : str, key : str):
 
 @bot.command(name = 'рекавер')
 async def recover(ctx):
+    global recovering
     roles = ''
+    recovering = True
     for role in ctx.message.author.roles:
         roles += str(role)
-    if ('ЧСВ' not in roles):
+    if ('Администратор догм' not in roles):
         return
     channel = bot.get_channel(685840409116540930)
     async for msg in channel.history(limit = 500):
-        if (str(msg.content) != 'Догма с таким ключом уже существует :teahah:'):
-          content = str(msg.content).split(' ')
-          content = content[1:]
-          _key = content[0]
-          content = content[1:]
-          await tset(ctx, _key, content)
+    await ctx.send('Начинаю восстановление догм.')
+        try:
+            if (str(msg.content) != 'Догма с таким ключом уже существует :teahah:'):
+              content = str(msg.content).split(' ')
+              content = content[1:]
+              _key = content[0]
+              content = content[1:]
+              await tset(ctx, _key, content)
+        except Exception as e:
+            await ctx.send('Произошла ошибка при копироввании догмы!')
+            await ctx.send(str(e))
     await ctx.send('~~Вирусная база данных успешно обновлена!~~')
+    recovering = False
 
 @bot.command(name = 'сет')
 async def tset(ctx, _key : str, *content):
+    global recovering
     channel = bot.get_channel(685840409116540930)
-    await channel.send(str(ctx.message.content))
+    if (recovering == False):
+        await channel.send(str(ctx.message.content))
     for i in _key:
         if (i in ['*', '/', '|', '\\',]):
             await ctx.send('Я запрещаю вам использовать спецсимволы!')
@@ -116,8 +127,9 @@ async def tset(ctx, _key : str, *content):
         return
     for i in db.all():
         if (i['_key'] == _key):
-            await ctx.send('Догма с таким ключом уже существует :teahah:')
-            return
+            if (recovering == False):
+                await ctx.send('Догма с таким ключом уже существует :teahah:')
+                return
     listContent[0] = ''.join(listContent[0])
     strContent = ' '.join(listContent)
     if (strContent.startswith('https://')):
@@ -176,7 +188,7 @@ async def delete(ctx, _key):
     
 @bot.command(name = "хелп")
 async def helping(ctx):
-    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\nЗа помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF\n"асдогма а <число>" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица <@ник>" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.\n"аспогости <@ник>" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.\n"ассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально)" - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.')  
+    await ctx.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\nЗа помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF\n"асдогма а <число>" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица <@ник>" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.\n"аспогости <@ник>" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.\n"ассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально)" - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.\n:stop_sign:"асрадуга" - выводит случайную догму из списка оных (осторожно, возможно наличие 18+ контента (nsfw).)')  
 
 
 @bot.command(name = "птица")
@@ -223,4 +235,4 @@ async def guesting(ctx, person : discord.Member):
 
 
 
-bot.run(ASTRANGER)
+bot.run(BSTRANGER)
