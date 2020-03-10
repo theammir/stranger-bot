@@ -8,7 +8,6 @@ async def get_pre(bot, message):
   return ['ас', 'Ас', 'АС', 'аС']  # or a list, ["pre1","pre2"]
 
 bot = commands.Bot(command_prefix = get_pre)
-
 ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xl5srA.AIm-zDe-A6YvCElKQshQqoCkJ0c'
 BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
 BFTAE = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
@@ -20,6 +19,7 @@ recovering = False
 if (db.search(SUI.image == 'a1.jpg') == []):
     db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
     db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
+
 
 @bot.event
 async def on_ready():
@@ -61,9 +61,8 @@ async def on_message(message):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
     await bot.process_commands(message)
+
     
-
-
 @bot.group(name = 'догма')
 async def dogme(ctx, clan : str, key : str):
     _key = key
@@ -83,6 +82,7 @@ async def dogme(ctx, clan : str, key : str):
             pass
     else:
         await ctx.send("Бот нифига не нашел")
+
 
 @bot.command(name = 'рекавер')
 async def recover(ctx):
@@ -109,6 +109,7 @@ async def recover(ctx):
     await ctx.send('~~Вирусная база данных успешно обновлена!~~')
     recovering = False
 
+
 @bot.command(name = 'сет')
 async def tset(ctx, _key : str, *content):
     global recovering
@@ -130,16 +131,16 @@ async def tset(ctx, _key : str, *content):
             if (recovering == False):
                 await ctx.send('Догма с таким ключом уже существует :teahah:')
                 return
-    listContent[0] = ' '.join(listContent[0])
+    listContent[0] = ''.join(listContent[0])
     strContent = ' '.join(listContent)
     print(str(listContent))
     if (strContent.startswith('https://')):
         link = listContent[0]
-        extention = '.png'
-        if (link.endswith('.jpg') or link.endswith('.jpeg')):
-            extention = '.jpg'
-        elif (link.endswith('.png')):
-            extention = '.png'
+        extention = '.jpeg'
+        # if (link.endswith('.jpg') or link.endswith('.jpeg')):
+        #     extention = '.jpg'
+        # elif (link.endswith('.png')):
+        #     extention = '.png'
         message = ' '.join(listContent[1:])
         
         html = rq.get(link, stream = True)
@@ -150,12 +151,14 @@ async def tset(ctx, _key : str, *content):
     else:
         message = ' '.join(listContent)
         db.insert({'_key' : _key, 'message' : message})
+
             
 @bot.command(name = 'лист')
 async def dlist(ctx):
     allbase = db.all()
     for i in allbase:
         await ctx.send(f'Key: {i["_key"]}, Message: {i["message"]}')
+
     
 @bot.command(aliases = ['радуга', 'лгбт'])
 async def rainbow(ctx):
@@ -175,6 +178,7 @@ async def rainbow(ctx):
         except Exception as e:
             pass
 
+
 @bot.command('делит')
 async def delete(ctx, _key):
     roles = ''
@@ -186,9 +190,6 @@ async def delete(ctx, _key):
             if (str(i.content).lower().startswith(f'ассет {_key}')):
                 await i.delete()
                 return
-
-
-
 
     
 @bot.command(name = "хелп")
@@ -218,6 +219,7 @@ async def reboot(reconnect = True):
     while (bot.is_closed()):
         await bot.connect()
 
+
 @bot.command(name = 'погости')
 async def guesting(ctx, person : discord.Member):
     if (str(ctx.message.author) == str(person)):
@@ -238,6 +240,17 @@ async def guesting(ctx, person : discord.Member):
             break
 
 
+@bot.command(name = 'пьюрдж')
+async def dbpurge(ctx):
+    roles = ''
+    for role in ctx.message.author.roles:
+        roles += role
+    roles = roles.lower()
+    if ('Креатор' not in roles):
+        await ctx.send('ДА КАК ТЫ ПОСМЕЛ, СМЕРТНЫЙ?!')
+        return
+    else:
+        db.purge()
 
 
-bot.run(ASTRANGER)
+bot.run(BSTRANGER)
