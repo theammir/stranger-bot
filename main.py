@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from random import randint, choice
 import requests as rq
+import shutil
 from tinydb import TinyDB, Query
 
 async def get_pre(bot, message):
@@ -133,21 +134,21 @@ async def tset(ctx, _key : str, *content):
                 return
     listContent[0] = ''.join(listContent[0])
     strContent = ' '.join(listContent)
-    print(str(listContent))
     if (strContent.startswith('https://')):
         link = listContent[0]
-        extention = '.jpeg'
-        # if (link.endswith('.jpg') or link.endswith('.jpeg')):
-        #     extention = '.jpg'
-        # elif (link.endswith('.png')):
-        #     extention = '.png'
+        link = link.replace(' ', '')
+        extention = '.gif'
+        if (link.endswith('.jpg') or link.endswith('.jpeg')):
+            extention = '.jpg'
+        elif (link.endswith('.png')):
+            extention = '.png'
         message = ' '.join(listContent[1:])
-        
-        html = rq.get(link, stream = True)
-        with open(f'a{_key}{extention}', 'bw') as f:
-            for chunk in html.iter_content(8192):
-                f.write(chunk)
-        db.insert({'_key' : _key, 'message' : message, 'image' : f'a{_key}{extention}'})
+
+        response = rq.get(link, stream=True)
+        with open(f'a{_key}{extention}', 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        del response
+        db.insert({'_key' : _key, 'image' : f'a{_key}{extention}', 'message' : message})
     else:
         message = ' '.join(listContent)
         db.insert({'_key' : _key, 'message' : message})
@@ -253,4 +254,4 @@ async def dbpurge(ctx):
         db.purge()
 
 
-bot.run(BSTRANGER)
+bot.run(ASTRANGER)
