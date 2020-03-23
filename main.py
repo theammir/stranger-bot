@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from random import randint, choice
 import requests as rq
+from bs4 import BeautifulSoup as bs
 import shutil
 from tinydb import TinyDB, Query
 
@@ -24,6 +25,9 @@ if (db.search(SUI.image == 'a1.jpg') == []):
 
 @bot.event
 async def on_ready():
+    message = bot.get_message(691656804048044104)
+    ctx = await bot.get_context(message)
+    await recover(ctx = ctx)
     await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
     guild = bot.get_guild(671432722236964884)
     COLOURER = 673966918281199616
@@ -272,5 +276,16 @@ async def dbpurge(ctx):
     else:
         db.purge()
 
+@bot.command(name = 'инфа')
+async def coronainfo(ctx, country = ''):
+    if (country == ''):
+        r = rq.get('https://www.worldometers.info/coronavirus/')
+    else:
+        r = rq.get('https://www.worldometers.info/coronavirus/country/' + country.lower())
+    html = bs(r.content, 'html.parser')
+    span = html.select('.container > .row > .col-md-8 > .content-inner > #maincounter-wrap > h1')
+    count = html.select('.container > .row > .col-md-8 > .content-inner > #maincounter-wrap > .maincounter-number > span')
+    for i in range(3):
+        await ctx.send(f'{span[i].text} {count[i].text}')
 
 bot.run(ASTRANGER)
