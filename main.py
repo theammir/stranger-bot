@@ -293,7 +293,7 @@ async def fetch(ctx, person : discord.Member):
 @bot.command(name = 'ребут')
 async def reboot(reconnect = True):
     await bot.close()
-    bot.run(BSTRANGER)
+    bot.run(ASTRANGER)
 
 
 @bot.command(name = 'погости')
@@ -326,7 +326,7 @@ async def dbpurge(ctx):
     for role in ctx.message.author.roles:
         roles += role
     roles = roles.lower()
-    if ('Креатор' not in roles):
+    if ('креатор' not in roles):
         async with channel.typing():
             await channel.send('ДА КАК ТЫ ПОСМЕЛ, СМЕРТНЫЙ?!')
         return
@@ -345,4 +345,4 @@ async def coronainfo(ctx, country = ''):
     for i in range(3):
         await ctx.send(f'{span[i].text} {count[i].text}')
 
-bot.run(BSTRANGER)
+bot.run(ASTRANGER)
