@@ -82,7 +82,7 @@ async def dogme(ctx, clan : str, key : str):
     _key = key
     dictionary = db.search(SUI._key == _key)
     if (clan in ['а', 'a']):
-        if (key = 'девиз'):
+        if (key == 'девиз'):
             await ctx.send('**Прах ты, и в прах возвратишься!**')
             return
         try:
