@@ -9,11 +9,12 @@ from tinydb import TinyDB, Query
 async def get_pre(bot, message):
   return ['ас', 'Ас', 'АС', 'аС']
 
-bot = commands.Bot(command_prefix = get_pre)
+bot = commands.Bot(command_prefix = get_pre, case_insensetive = True)
 ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xl5srA.AIm-zDe-A6YvCElKQshQqoCkJ0c'
 BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
-BFTAE = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
+BFTAE     = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
 db = TinyDB('data.json')
+tags = TinyDB('dbta.json')
 SUI = Query()
 counter = 0
 _key = ''
@@ -25,25 +26,26 @@ if (db.search(SUI.image == 'a1.jpg') == []):
 
 @bot.event
 async def on_ready():
-    message = bot.get_message(691656804048044104)
+    channel = bot.get_channel(693112638275584260)
+    message = await channel.fetch_message(693112703492816898)
     ctx = await bot.get_context(message)
-    await recover(ctx = ctx)
-    await bot.change_presence(activity=discord.Game(name='команду "асхелп"'))
+    await bot.change_presence(activity = discord.Game(name='команду "асхелп"'))
     guild = bot.get_guild(671432722236964884)
     COLOURER = 673966918281199616
     SOVIET = 685813138301780027
     CREATOR = 676388955985412116
     ADMIN = 676389164727402517
-    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
     await guild.get_role(COLOURER).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
     await guild.get_role(SOVIET).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
     await guild.get_role(CREATOR).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 256), randint(0, 256), randint(0, 256))
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
     await guild.get_role(ADMIN).edit(colour = colour, reason = None)
+    await recover(ctx = ctx)
 
-    
+
 @bot.event
 async def on_message(message):
     channel = message.channel
@@ -55,13 +57,17 @@ async def on_message(message):
         ctx = await bot.get_context(message)
         await dogme(ctx, clan = 'a', key = _key)
     #if (str(message.author) == "Гошасс#8787" and str(message.content) == "СУЙ" or str(message.author) == "ΤχεΑμμιΡ#6109"and message.content == "СУЙ"):
+    for user in tags.all():
+        dmember = bot.get_user(user['id'])
+        if (dmember in message.mentions):
+            await channel.send(' '.join(user['message']))
     if (str(message.content) == "СУЙ"):
           if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
               async with channel.typing():
                   await channel.send(file = discord.File('a1.jpg'))
     elif (Killant in message.mentions):
         await channel.send('```#КИЛЛ ВЕРНИСЬ В КОНОХУ```')
-    elif (cantent.startswith("Ъуъ") or cantent.startswith('ъуъ') or cantent.startswith('ъУъ') or cantent.startswith('ъуЪ') or cantent.startswith("ЪУЪ") or cantent.startswith('ЪуЪ') or cantent.startswith("ЪУъ") or cantent.startswith('ъУЪ') or cantent.startswith('iyi')or cantent.endswith('Ъуъ') or cantent.endswith('ъуъ') or cantent.endswith('ЪУЪ') or cantent.endswith('ъУъ') or cantent.endswith('ъуЪ') or cantent.endswith('ЪУъ') or cantent.endswith('ъУЪ') or cantent.endswith('ЪуЪ') or cantent.endswith('iyi')):
+    elif (cantent.lower().startswith(('ъуъ', 'ъyъ', 'ъγъ', 'iyi', 'iуi', 'iγi')) or cantent.lower().endswith(('ъуъ', 'ъyъ', 'ъγъ', 'iyi', 'iуi', 'iγi'))):
         if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789', '8787']):
             await channel.send(file = discord.File('a2.jpg'))
     elif (str(message.content) == "цвет пакажы"):
@@ -69,7 +75,7 @@ async def on_message(message):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
     await bot.process_commands(message)
 
-    
+
 @bot.group(name = 'догма')
 async def dogme(ctx, clan : str, key : str):
     channel = ctx.message.channel
@@ -93,9 +99,35 @@ async def dogme(ctx, clan : str, key : str):
             await channel.send("Бот нифига не нашел")
 
 
+@bot.command(aliases = ['тег', 'тэг'])
+async def astag(ctx, user, *, args):
+    global recovering
+    tchannel = bot.get_channel(692447840148127864)
+    try:
+        user = int(user)
+    except:
+        if (tags.search(SUI.id == user.id) == []):
+            tags.insert({'id' : user.id, 'message' : args})
+            if (recovering == False):
+                await tchannel.send(f'астег {str(user.id)} {args}')
+        else:
+            await ctx.send('На тег этого человека уже воспроизводится команда.')
+            return
+    else:
+        if (tags.search(SUI.id == user) == []):
+            tags.insert({'id' : user, 'message' : args})
+            if (recovering == False):
+                await tchannel.send(str(ctx.message.content))
+        else:
+            await ctx.send('На тег этого человека уже воспроизводится команда.')
+            return
+
+
+
 @bot.command(name = 'рекавер')
 async def recover(ctx):
     db.purge()
+    tags.purge()
     channel = ctx.message.channel
     global recovering
     roles = ''
@@ -104,22 +136,23 @@ async def recover(ctx):
         roles += str(role)
     if ('Администратор догм' not in roles):
         return
-    achannel = bot.get_channel(685840409116540930)
+    assets = bot.get_channel(685840409116540930)
+    astags = bot.get_channel(692447840148127864)
     async with channel.typing():
-        await channel.send('Начинаю восстановление догм.')
-        async for msg in achannel.history(limit = 500):
-            try:
-                if (str(msg.content) != 'Догма с таким ключом уже существует :teahah:'):
-                  content = str(msg.content).split(' ')
-                  content = content[1:]
-                  _key = content[0]
-                  content = content[1:]
-                  await tset(ctx, _key, content)
-            except Exception as e:
-                await channel.send('Произошла ошибка при копироввании догмы!:')
-                await channel.send(str(e))
-        await channel.send('~~Вирусная база данных успешно обновлена!~~')
+        await channel.send('Рекавер 2.0\nСтадия: СТАРТ')
+        await channel.send('Начинается восстановления догм.')
+    async for i in assets.history():
+        _key = i.content.split(' ')[1]
+        content = tuple(i.content.split(' ')[2:])
+        await tset(ctx, _key, *content)
+    async for i in astags.history():
+        user = i.content.split(' ')[1]
+        args = i.content.split(' ')[2:]
+        await astag(ctx, user = user, args = args)
     recovering = False
+    async with channel.typing():
+        await channel.send('Рекавер 2.0\nСтадия: END')
+        await channel.send('~~Вирусная база данных успешно обновлена~~')
 
 
 @bot.command(name = 'сет')
@@ -153,14 +186,19 @@ async def tset(ctx, _key : str, *content):
     if (strContent.startswith('https://')):
         link = listContent[0]
         link = link.replace(' ', '')
-        extention = '.gif'
+        link = str(link.split('?')[0])
+        extention = ''
         if (link.endswith('.jpg') or link.endswith('.jpeg')):
             extention = '.jpg'
         elif (link.endswith('.png')):
             extention = '.png'
+        elif (link.endswith('.gif')):
+            extention = '.gif'
+        else:
+            print(link.replace(' ', '_'))
         message = ' '.join(listContent[1:])
 
-        response = rq.get(link, stream=True)
+        response = rq.get(link, stream = True)
         with open(f'a{_key}{extention}', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
         del response
@@ -169,14 +207,14 @@ async def tset(ctx, _key : str, *content):
         message = ' '.join(listContent)
         db.insert({'_key' : _key, 'message' : message})
 
-            
+
 @bot.command(name = 'лист')
 async def dlist(ctx):
     allbase = db.all()
     for i in allbase:
         await ctx.send(f'Key: {i["_key"]}, Message: {i["message"]}')
 
-    
+
 @bot.command(aliases = ['радуга', 'лгбт'])
 async def rainbow(ctx):
     randkey = choice(db.all())['_key']
@@ -212,7 +250,25 @@ async def delete(ctx, _key):
 async def helping(ctx):
     channel = ctx.message.channel
     async with channel.typing():
-        await channel.send('>>> Привет!\nИспользуй "асхелп" для вызова этого сообщения еще раз.\nЗа помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF\n"асдогма а <число>" - отправляет в чат фразу или картинку, которую флот взял за догму.\n"асдогма а девиз" - отправляет девиз флота.\n"асптица <@ник>" - выдаёт роль кандидата. Работает только при наличии роли с правом выдачи кандидата.\n"аспогости <@ник>" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.\n"ассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально)" - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.\n:stop_sign:"асрадуга" - выводит случайную догму из списка оных (осторожно, возможно наличие 18+ контента (nsfw).)')
+        await channel.send('Привет!')
+        embed = discord.Embed(
+            title = 'Список команд',
+            colour = discord.Colour.from_rgb(153, 95, 199),
+            type = 'rich',
+            description = 'Бота A STRANGER:',
+        )
+        embed.add_field(name = 'Команда помощи', value = '"асхелп" для вызова этого сообщения еще раз')
+        embed.add_field(name = 'Сервер Странника', value = 'За помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF')
+        embed.add_field(name = 'Команда догм', value = '"асдогма а <ключ>" - отправляет в чат фразу или картинку, которую флот взял за догму.')
+        embed.add_field(name = 'Девизы', value = '"асдогма а девиз" - пишет девиз флота.')
+        embed.add_field(name = 'Сптичить гостя', value = '"асптица <@ник>" выдаёт роль кандидата человеку. Работает при наличии роли обучатора.')
+        embed.add_field(name = 'Выдать гостя обратно', value = '"аспогости <@ник>" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.')
+        embed.add_field(name = 'Своя догма', value = '"ассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально)" - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.')
+        embed.add_field(name = ':stop_sign:Воля случая', value = '"асрадуга" - выводит случайную догму из списка оных (осторожно, возможно наличие 18+ контента (nsfw).)')
+        embed.add_field(name = ':x:Удаление догм', value = '"асделит <ключ>" удаляет догму. Недоступно для обычного пользователя.')
+        embed.add_field(name = ':x:Сломались догмы?', value = 'За помощью к Айсу/Гоше можно обратиться всегда за исключением того, если на сервере нет Гоши по каким-то причинам')
+        embed.add_field(name = 'Коронавирус', value = '"асинфа <country>(опционально) - статистика по заражению коронавирусом."')
+        await channel.send(embed = embed)
 
 
 @bot.command(name = "птица")
@@ -232,11 +288,12 @@ async def fetch(ctx, person : discord.Member):
     else:
         await person.add_roles(guild.get_role(670649392398729270), reason=None)
         await person.remove_roles(guild.get_role(670719148699156511), reason=None)
-        
+
 
 @bot.command(name = 'ребут')
 async def reboot(reconnect = True):
     await bot.close()
+    bot.run(BSTRANGER)
 
 
 @bot.command(name = 'погости')
@@ -288,4 +345,4 @@ async def coronainfo(ctx, country = ''):
     for i in range(3):
         await ctx.send(f'{span[i].text} {count[i].text}')
 
-bot.run(ASTRANGER)
+bot.run(BSTRANGER)
