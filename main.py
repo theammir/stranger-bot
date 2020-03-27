@@ -10,9 +10,9 @@ async def get_pre(bot, message):
   return ['ас', 'Ас', 'АС', 'аС']
 
 bot = commands.Bot(command_prefix = get_pre, case_insensetive = True)
-ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xl5srA.AIm-zDe-A6YvCElKQshQqoCkJ0c'
-BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
-BFTAE     = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
+ASTRANGER = # secret
+BSTRANGER = # secret
+BFTAE     = # secret
 db = TinyDB('data.json')
 tags = TinyDB('dbta.json')
 SUI = Query()
