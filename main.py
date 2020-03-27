@@ -81,22 +81,28 @@ async def dogme(ctx, clan : str, key : str):
     channel = ctx.message.channel
     _key = key
     dictionary = db.search(SUI._key == _key)
-    try:
-        img = dictionary[0]['image']
-    except:
-        pass
-    async with channel.typing():
-        if (dictionary != []):
-            try:
-                await channel.send(dictionary[0]['message'])
-            except:
-                pass
-            try:
-                await channel.send(file = discord.File(img))
-            except:
-                pass
-        else:
-            await channel.send("Бот нифига не нашел")
+    if (clan in ['а', 'a']):
+        if (key = 'девиз'):
+            await ctx.send('**Прах ты, и в прах возвратишься!**')
+            return
+        try:
+            img = dictionary[0]['image']
+        except:
+            pass
+        async with channel.typing():
+            if (dictionary != []):
+                try:
+                    await channel.send(dictionary[0]['message'])
+                except:
+                    pass
+                try:
+                    await channel.send(file = discord.File(img))
+                except:
+                    pass
+            else:
+                await channel.send("Бот нифига не нашел")
+    elif (clan in ['р', 'p', 'r']):
+        await ctx.send('Союз распался в ~~1991~~ 2019')
 
 
 @bot.command(aliases = ['тег', 'тэг'])
