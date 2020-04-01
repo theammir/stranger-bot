@@ -10,8 +10,8 @@ async def get_pre(bot, message):
   return ['ас', 'Ас', 'АС', 'аС']
 
 bot = commands.Bot(command_prefix = get_pre, case_insensetive = True)
-ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xl5srA.AIm-zDe-A6YvCElKQshQqoCkJ0c'
-BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xl5sow.DU_HeHUNmRF0HoNfddiTQWKREnA'
+ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xn-nsA.w--gR1cpeD6wgY3zDNGVnGoOtXc'
+BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xn96kg.1oOjbKW8b_eqwSBT9-r0L_x4TlA'
 BFTAE     = 'Njc1Mzg5MDYwNjc5OTkxMzA4.Xl5snA.NkH8QucLvWbtil1hr-wKU0G6-dc'
 db = TinyDB('data.json')
 tags = TinyDB('dbta.json')
@@ -273,7 +273,9 @@ async def helping(ctx):
         embed.add_field(name = ':stop_sign:Воля случая', value = '"асрадуга" - выводит случайную догму из списка оных (осторожно, возможно наличие 18+ контента (nsfw).)')
         embed.add_field(name = ':x:Удаление догм', value = '"асделит <ключ>" удаляет догму. Недоступно для обычного пользователя.')
         embed.add_field(name = ':x:Сломались догмы?', value = 'За помощью к Айсу/Гоше можно обратиться всегда за исключением того, если на сервере нет Гоши по каким-то причинам')
+        embed.add_field(name = 'Сообщение при тэге', value = '"астег <пользователь> <сообщение>" - выдаёт сообщение при теге пользователя.')
         embed.add_field(name = 'Коронавирус', value = '"асинфа <country>(опционально) - статистика по заражению коронавирусом."')
+        embed.add_field(name = 'Кикстартерская кампания', value = '"аскикстартер" показывает статистику Pixel Starships на Kickstarter.')
         await channel.send(embed = embed)
 
 
@@ -350,5 +352,19 @@ async def coronainfo(ctx, country = ''):
     count = html.select('.container > .row > .col-md-8 > .content-inner > #maincounter-wrap > .maincounter-number > span')
     for i in range(3):
         await ctx.send(f'{span[i].text} {count[i].text}')
+
+
+@bot.command(aliases = ['кикстарт', 'кикстрат'])
+async def kickstart(ctx):
+  r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
+  html = bs(r.content, 'html.parser')
+  pledged = html.select('.ksr-green-500')[0].text
+  outof = html.select('.money')[0].text
+  backers = html.select('div.ml5.ml0-lg.mb4-lg > div > span')[0].text
+  toend = html.select('div.ml5.ml0-lg > div > div > span')[0].text
+  intpledg = pledged.replace('$', '').replace(',', '')
+  average = int(intpledg) / int(backers)
+  await ctx.send(f'Внесено {pledged} из {outof} в данный момент.\nВнесли {backers} человек.\nДо завершения {toend} дней\nВ среднем вносил ${average}.')
+
 
 bot.run(ASTRANGER)
