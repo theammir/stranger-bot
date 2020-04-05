@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands
 from random import randint, choice
@@ -19,6 +20,7 @@ SUI = Query()
 counter = 0
 _key = ''
 recovering = False
+result = None
 if (db.search(SUI.image == 'a1.jpg') == []):
     db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
     db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
@@ -73,6 +75,13 @@ async def on_message(message):
     elif (str(message.content) == "цвет пакажы"):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
+            await asyncio.sleep(1)
+    elif (message.content.startswith(':')):
+        cantent = cantent[1:]
+        def evaluate(ctn):
+            return eval(ctn)
+        async with channel.typing():
+            await channel.send(evaluate(cantent))
     await bot.process_commands(message)
 
 
@@ -147,11 +156,11 @@ async def recover(ctx):
     async with channel.typing():
         await channel.send('Рекавер 2.0\nСтадия: СТАРТ')
         await channel.send('Начинается восстановления догм.')
-    async for i in assets.history():
+    async for i in assets.history(limit = 1000):
         _key = i.content.split(' ')[1]
         content = tuple(i.content.split(' ')[2:])
         await tset(ctx, _key, *content)
-    async for i in astags.history():
+    async for i in astags.history(limit = 1000):
         user = i.content.split(' ')[1]
         args = i.content.split(' ')[2:]
         await astag(ctx, user = user, args = args)
@@ -354,7 +363,7 @@ async def coronainfo(ctx, country = ''):
         await ctx.send(f'{span[i].text} {count[i].text}')
 
 
-@bot.command(aliases = ['кикстарт', 'кикстрат'])
+@bot.command(aliases = ['кикстарт', 'кикстрат', 'кикстартер', 'кикстратер'])
 async def kickstart(ctx):
   r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
   html = bs(r.content, 'html.parser')
