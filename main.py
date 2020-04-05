@@ -1,7 +1,7 @@
 import asyncio
 import discord
 from discord.ext import commands
-from random import randint, choice
+from random import *
 import requests as rq
 from bs4 import BeautifulSoup as bs
 import shutil
@@ -76,7 +76,7 @@ async def on_message(message):
         while (1==1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
             await asyncio.sleep(1)
-    elif (message.content.startswith(':')):
+    elif (message.content.startswith(';')):
         cantent = cantent[1:]
         def evaluate(ctn):
             return eval(ctn)
