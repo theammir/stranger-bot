@@ -20,7 +20,7 @@ tags = TinyDB('dbta.json')
 SUI = Query()
 _key = ''
 recovering = False
-if (db.search(SUI.image == 'a1.jpg') == []):
+if (db.search(SUI.key == '1') == []):
     db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
     db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
 
@@ -30,7 +30,7 @@ async def on_ready():
     channel = bot.get_channel(693112638275584260)
     message = await channel.fetch_message(693112703492816898)
     ctx = await bot.get_context(message)
-    await bot.change_presence(activity = discord.Game(name='команду "асхелп"/"ashelp"'))
+    await bot.change_presence(activity = discord.Game(name='"асхелп"/"ashelp"'))
     guild = bot.get_guild(671432722236964884)
     COLOURER = 673966918281199616
     SOVIET = 685813138301780027
@@ -299,7 +299,7 @@ async def delete(ctx, _key):
                 await i.delete()
 
 
-@bot.command(name = "хелп", aliases = ['help'])
+@bot.command(name = "хелп", aliases = ['help', 'helping'])
 async def help(ctx):
     eng = True if ctx.message.content.lower().startswith('as') else False
     channel = ctx.message.channel
@@ -333,7 +333,7 @@ async def help(ctx):
                 type = 'rich',
                 description = 'Command list',
             )
-            embed.add_field(name = 'Help command', value = '"ashelping" to call this message again.')
+            embed.add_field(name = 'Help command', value = '"ashelp" to call this message again.')
             embed.add_field(name = 'A Stranger\'s Discord Server', value = 'For help or to offer something - https://discord.gg/A4NETzF')
             embed.add_field(name = 'Dogmas command', value = '"asdogma a <key>" - sends a message or a picture the fleet has taken as a dogma.')
             embed.add_field(name = 'Mottos', value = '"asdogma a motto" - sends fleet motto.')
@@ -375,8 +375,9 @@ async def fetch(ctx, person : discord.Member):
             else:
                 await channel.send(eng[1])
     else:
-        await person.add_roles(guild.get_role(670649392398729270), reason=None)
-        await person.remove_roles(guild.get_role(670719148699156511), reason=None)
+        await person.remove_roles(guild.get_role(686634008444141618), reason = None)
+        await person.add_roles(guild.get_role(670649392398729270), reason = None)
+        await person.remove_roles(guild.get_role(670719148699156511), reason = None)
 
 
 @bot.command(name = 'ребут')
@@ -408,6 +409,7 @@ async def guesting(ctx, person : discord.Member):
     roles = roles.lower()
     for element in required_roles:
         if (element in roles):
+            await person.remove_roles(guild.get_role(686634008444141618), reason = None)
             await person.remove_roles(guild.get_role(670649392398729270), reason = None)
             await person.add_roles(guild.get_role(670719148699156511), reason = None)
         else:
