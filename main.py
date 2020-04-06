@@ -439,4 +439,4 @@ async def kickstart(ctx):
   await ctx.send(f'Внесено {pledged} из {outof} в данный момент.\nВнесли {backers} человек.\nДо завершения {toend} дней\nВ среднем вносил ${average}.')
 
 
-bot.run(BSTRANGER)
+bot.run(ASTRANGER)
