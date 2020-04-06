@@ -273,8 +273,6 @@ async def dlist(ctx):
 @bot.command(aliases = ['радуга', 'лгбт', 'lgbt', 'lgbtq', 'rnbw'])
 async def rainbow(ctx):
     randkey = choice(db.all())['_key']
-    if (randkey == 'нсфв'):
-        randkey = choice(db.all())['_key']
     dictionary = db.search(SUI._key == randkey)
     if (dictionary != []):
         try:
@@ -353,18 +351,29 @@ async def help(ctx):
 
 @bot.command(name = "птица", aliases = ['rookh', 'bird', 'ptitsa'])
 async def fetch(ctx, person : discord.Member):
+    rus = ['Вы не можете давать роль сами себе.',
+            'Вам нужна роль обучатора для использования этой команды.']
+    eng = ['You can\'t give a role to you.',
+            'Your need Обучатор role to use this command.']
+    isrus = ctx.message.content.lower().startswith('as')
     channel = ctx.message.channel
     if (str(ctx.message.author) == str(person)):
         async with channel.typing():
-            await channel.send("Вы не можете давать роль сами себе или у вас нет соответствующего разрешения")
-        pass
+            if (isrus):
+                await channel.send(rus[0])
+            else:
+                await channel.send(eng[0])
+        return
     guild = bot.get_guild(person.guild.id)
     roles = ''
     for element in ctx.message.author.roles:
         roles += str(element)
     if ('обучатор' not in roles):
         async with channel.typing():
-            await channel.send('Нужно быть обучатором, что-бы пользоваться этой командой')
+            if (isrus):
+                await channel.send(rus[1])
+            else:
+                await channel.send(eng[1])
     else:
         await person.add_roles(guild.get_role(670649392398729270), reason=None)
         await person.remove_roles(guild.get_role(670719148699156511), reason=None)
@@ -378,11 +387,19 @@ async def reboot(reconnect = True):
 
 @bot.command(name = 'погости', aliases = ['guest'])
 async def guesting(ctx, person : discord.Member):
+    rus = ['Вы не можете изменять роли самому себе.',
+            'Вы не имеете права на изменение ролей этого человека.']
+    eng = ['You can\'t edit your own roles.',
+            'You can\'t edit roles of this member.']
+    isrus = ctx.message.content.lower().startswith('as')
     channel = ctx.message.channel
     if (str(ctx.message.author) == str(person)):
         async with channel.typing():
-            await channel.send('Вы не можете изменять роли самому себе.')
-        pass
+            if (isrus):
+                await channel.send(rus[0])
+            else:
+                await channel.send(eng[0])
+        return
     guild = bot.get_guild(person.guild.id)
     roles = ''
     required_roles = ['обучатор', 'совет флота', 'адмирал', 'вице адмирал', 'доверенный']
@@ -395,7 +412,10 @@ async def guesting(ctx, person : discord.Member):
             await person.add_roles(guild.get_role(670719148699156511), reason = None)
         else:
             async with channel.typing():
-                await channel.send('Вы не имеете права на изменение ролей этого человека.')
+                if (isrus):
+                    await channel.send(rus[1])
+                else:
+                    await channel.send(eng[1])
             break
 
 
@@ -408,7 +428,10 @@ async def dbpurge(ctx):
     roles = roles.lower()
     if ('креатор' not in roles):
         async with channel.typing():
-            await channel.send('ДА КАК ТЫ ПОСМЕЛ, СМЕРТНЫЙ?!')
+            if not (ctx.message.content.lower().startswith('as')):
+                await channel.send('ДА КАК ТЫ ПОСМЕЛ, СМЕРТНЫЙ?!')
+            else:
+                await channel.send('HOW DARE YOU?!')
         return
     else:
         db.purge()
@@ -428,15 +451,18 @@ async def coronainfo(ctx, country = ''):
 
 @bot.command(aliases = ['кикстарт', 'кикстрат', 'кикстартер', 'кикстратер', 'kickstarter'])
 async def kickstart(ctx):
-  r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
-  html = bs(r.content, 'html.parser')
-  pledged = html.select('.ksr-green-500')[0].text
-  outof = html.select('.money')[0].text
-  backers = html.select('div.ml5.ml0-lg.mb4-lg > div > span')[0].text
-  toend = html.select('div.ml5.ml0-lg > div > div > span')[0].text
-  intpledg = pledged.replace('$', '').replace(',', '')
-  average = int(intpledg) / int(backers)
-  await ctx.send(f'Внесено {pledged} из {outof} в данный момент.\nВнесли {backers} человек.\nДо завершения {toend} дней\nВ среднем вносил ${average}.')
+    r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
+    html = bs(r.content, 'html.parser')
+    pledged = html.select('.ksr-green-500')[0].text
+    outof = html.select('.money')[0].text
+    backers = html.select('div.ml5.ml0-lg.mb4-lg > div > span')[0].text
+    toend = html.select('div.ml5.ml0-lg > div > div > span')[0].text
+    intpledg = pledged.replace('$', '').replace(',', '')
+    average = int(intpledg) / int(backers)
+    if not (ctx.message.content.lower().startswith('as')):
+        await ctx.send(f'Внесено {pledged} из {outof} в данный момент.\nВнесли {backers} человек.\nДо завершения {toend} дней\nСредний внос: ${average}.')
+    else:
+        await ctx.send(f'Now pledged {pledged} out of {outof}.\nBackers: {backers}\nTo end: {toend} days.\nAverage payment: ${average}.')
 
 
 bot.run(ASTRANGER)
