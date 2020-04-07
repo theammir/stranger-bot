@@ -467,4 +467,4 @@ async def kickstart(ctx):
         await ctx.send(f'Now pledged {pledged} out of {outof}.\nBackers: {backers}\nTo end: {toend} days.\nAverage payment: ${average}.')
 
 
-bot.run(ASTRANGER)
+bot.run(BSTRANGER)
