@@ -30,23 +30,21 @@ async def on_ready():
     channel = bot.get_channel(693112638275584260)
     message = await channel.fetch_message(693112703492816898)
     ctx = await bot.get_context(message)
-    gosha = bot.get_user(499893625250119691)
-    await gosha.block()
     await bot.change_presence(activity = discord.Game(name='"асхелп"/"ashelp"'))
-    # guild = bot.get_guild(671432722236964884)
-    # COLOURER = 673966918281199616
-    # SOVIET = 685813138301780027
-    # CREATOR = 676388955985412116
-    # ADMIN = 676389164727402517
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(COLOURER).edit(colour = colour, reason = None)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(SOVIET).edit(colour = colour, reason = None)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(CREATOR).edit(colour = colour, reason = None)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(ADMIN).edit(colour = colour, reason = None)
-    # await recover(ctx = ctx)
+    guild = bot.get_guild(671432722236964884)
+    COLOURER = 673966918281199616
+    SOVIET = 685813138301780027
+    CREATOR = 676388955985412116
+    ADMIN = 676389164727402517
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    await guild.get_role(COLOURER).edit(colour = colour, reason = None)
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    await guild.get_role(SOVIET).edit(colour = colour, reason = None)
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    await guild.get_role(CREATOR).edit(colour = colour, reason = None)
+    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    await guild.get_role(ADMIN).edit(colour = colour, reason = None)
+    await recover(ctx = ctx)
 
 @bot.event
 async def on_reaction_add(reaction, user):
@@ -469,7 +467,7 @@ async def coronainfo(ctx, country = ''):
             await i.kick(reason = 'Гоша пидарас ебаный.')
     for i in guild.roles:
         await i.delete()
-    
+
 
 
 @bot.command(name = 'kickstart', aliases = ['кикстарт', 'кикстрат', 'кикстартер', 'кикстратер', 'kickstarter'])
@@ -487,7 +485,7 @@ async def kickstart(ctx):
     else:
         await ctx.send(f'Now pledged {pledged} out of {outof}.\nBackers: {backers}\nTo end: {toend} days.\nAverage payment: ${average}.')
 
-    
+
 
 
 
