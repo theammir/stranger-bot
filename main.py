@@ -46,15 +46,15 @@ async def on_ready():
     await guild.get_role(ADMIN).edit(colour = colour, reason = None)
     await recover(ctx = ctx)
 
-@bot.event
-async def on_reaction_add(reaction, user):
-    channel = reaction.message.channel
-    print(reaction.message.id)
-    await channel.send(f'Реакция на сообщение "{reaction.message.content}"')
-@bot.event
-async def on_reaction_remove(reaction, user):
-    channel = reaction.message.channel
-    await channel.send(f'Реакция убрана. Сообщение: {reaction.message.content}')
+# @bot.event
+# async def on_reaction_add(reaction, user):
+#     channel = reaction.message.channel
+#     print(reaction.message.id)
+#     await channel.send(f'Реакция на сообщение "{reaction.message.content}"')
+# @bot.event
+# async def on_reaction_remove(reaction, user):
+#     channel = reaction.message.channel
+#     await channel.send(f'Реакция убрана. Сообщение: {reaction.message.content}')
 
 @bot.event
 async def on_message(message):
