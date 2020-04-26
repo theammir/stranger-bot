@@ -5,7 +5,7 @@ from random import *
 import requests as rq
 from bs4 import BeautifulSoup as bs
 import shutil
-import maingame
+#import maingame
 from tinydb import TinyDB, Query
 
 async def get_pre(bot, message):
