@@ -5,6 +5,7 @@ from random import *
 import requests as rq
 from bs4 import BeautifulSoup as bs
 import shutil
+import maingame
 from tinydb import TinyDB, Query
 
 async def get_pre(bot, message):
@@ -172,7 +173,11 @@ async def recover(ctx):
     autor = str(ctx.message.author)
     roles = ''
     recovering = True
-    if (autor[len(autor) - 4 : len(autor)] not in ['6109', '6609', '8787']):
+    for i in ctx.message.author.roles:
+        roles += str(i)
+    if ('Администратор догм' in roles):
+        pass
+    else:
         return
     assets = bot.get_channel(685840409116540930)
     astags = bot.get_channel(692447840148127864)
