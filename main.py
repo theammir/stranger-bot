@@ -7,11 +7,20 @@ from bs4 import BeautifulSoup as bs
 import shutil
 #import maingame
 from tinydb import TinyDB, Query
+import colorama
+from colorama import Fore, Style
+
+colorama.init()
 
 async def get_pre(bot, message):
   return ['ас', 'Ас', 'АС', 'аС', 'ass', 'Ass', 'ASS', 'aSS', 'as', 'As', 'aS', 'AS',]
 
 bot = commands.Bot(command_prefix = get_pre, case_insensetive = True)
+def log(message, code = 'g'):
+    g = 'g'
+    r = 'r'
+    print(f'[{Fore.GREEN}ASTRANGER{Style.RESET_ALL}] {message}'  if code == g else f'[{Fore.RED}ASTRANGER{Style.RESET_ALL}] {message}')
+log('Обьект бота инициализирован.')
 bot.remove_command('help')
 ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xn-nsA.w--gR1cpeD6wgY3zDNGVnGoOtXc'
 BSTRANGER = 'NjcyMTE1NzgyNDM5OTI3ODQw.Xn96kg.1oOjbKW8b_eqwSBT9-r0L_x4TlA'
@@ -21,9 +30,13 @@ tags = TinyDB('dbta.json')
 SUI = Query()
 _key = ''
 recovering = False
-if (db.search(SUI.key == '1') == []):
-    db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
-    db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
+def reset():
+    if (db.search(SUI.key == '1') == []):
+        db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
+        db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
+reset()
+log('Основные догмы восстановлены.')
+log('Бот запущен.')
 
 
 @bot.event
@@ -33,19 +46,13 @@ async def on_ready():
     ctx = await bot.get_context(message)
     await bot.change_presence(activity = discord.Game(name='"асхелп"/"ashelp"'))
     guild = bot.get_guild(671432722236964884)
-    COLOURER = 673966918281199616
-    SOVIET = 685813138301780027
-    CREATOR = 676388955985412116
-    ADMIN = 676389164727402517
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(COLOURER).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(SOVIET).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(CREATOR).edit(colour = colour, reason = None)
-    colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    await guild.get_role(ADMIN).edit(colour = colour, reason = None)
+    roles = [673966918281199616, 685813138301780027, 676388955985412116, 676389164727402517]
+    for r in roles:
+        colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+        await guild.get_role(r).edit(colour = colour, reason = None)
+    log('Цвета ролей обновлены.')
     await recover(ctx = ctx)
+    log('Базы данных восстановлены.')
 
 # @bot.event
 # async def on_reaction_add(reaction, user):
@@ -168,6 +175,7 @@ async def recover(ctx):
             '~~Вирусная база данных успешно обновлена~~']
     db.purge()
     tags.purge()
+    reset()
     channel = ctx.message.channel
     global recovering
     autor = str(ctx.message.author)
@@ -278,10 +286,48 @@ async def tset(ctx, _key : str, *content):
 
 
 @bot.command(name = 'лист', aliases = ['list'])
-async def dlist(ctx):
+async def dlist(ctx, page : int = 1):
     allbase = db.all()
-    for i in allbase:
-        await ctx.send(f'Key: {i["_key"]}, Message: {i["message"]}')
+    REQUESTED_BY = ctx.message.author
+    PAGE_ELS     = 5
+    PAGES        = len(allbase) // PAGE_ELS
+    DOGMES       = len(allbase)
+    sent = await ctx.send('**Initialising...**')
+    for PAGE in range(PAGES):
+        embed = discord.Embed(
+            type        = 'rich',
+            title       = 'СПИСОК ДОГМ',
+            description = f'Страница {PAGE + 1}',
+            color       = discord.Colour.from_rgb(153, 95, 199)
+        )
+        for i in range(5):
+            i += PAGE * PAGE_ELS
+            fieldname = ''
+            fieldvalue = ''
+            if (allbase[i]['message'] != ''):
+                if (len(allbase[i]['_key']) < 255):
+                    fieldname = allbase[i]["_key"]
+                else:
+                    msg = allbase[i]['_key']
+                    fieldname = msg[:len(msg) - (len(msg) - 100) - 5 - len(allbase[i]["_key"])] + '...'
+            else:
+                fieldname = f'{allbase[i]["_key"]} : `EMPTY`'
+
+            if (len(allbase[i]['message']) < 255):
+                fieldvalue = allbase[i]['message']
+            else:
+                msg = allbase[i]['message']
+                fieldvalue = msg[:len(msg) - (len(msg) - 100) - 5 - 30] + '...'
+            fieldvalue += '\nДогма содержит изображение.' if allbase[i].get('image') else '\nДогма не содержит изображение.'
+            embed.add_field(name = fieldname, value = fieldvalue, inline = False)
+            DOGMES -= 1
+        await sent.edit(content = '', embed = embed)
+        await sent.add_reaction('⏭️')
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = lambda reaction, user: user == REQUESTED_BY and str(reaction.emoji) == '⏭️')
+        except asyncio.TimeoutError:
+            await sent.delete()
+            return
 
 
 @bot.command(name = 'rainbow', aliases = ['радуга', 'лгбт', 'lgbt', 'lgbtq', 'rnbw'])
@@ -493,5 +539,6 @@ async def kickstart(ctx):
 
 
 
-
+log('Инициализированы все необходимые команды.')
+log('Бот подготавливается к запуску.')
 bot.run(ASTRANGER)
