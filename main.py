@@ -36,7 +36,6 @@ def reset():
         db.insert({'_key' : '2', 'image' : 'a2.jpg', 'message' : ''}) # ЪУЪ
 reset()
 log('Основные догмы восстановлены.')
-log('Бот запущен.')
 
 
 @bot.event
@@ -46,13 +45,26 @@ async def on_ready():
     ctx = await bot.get_context(message)
     await bot.change_presence(activity = discord.Game(name='"асхелп"/"ashelp"'))
     guild = bot.get_guild(671432722236964884)
-    roles = [673966918281199616, 685813138301780027, 676388955985412116, 676389164727402517]
-    for r in roles:
+    def changecolor(id, guild = guild):
+        role = guild.get_role(id)
         colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-        await guild.get_role(r).edit(colour = colour, reason = None)
+        return role.edit(colour = colour)
+    await changecolor(673966918281199616)
+    await changecolor(685813138301780027)
+    await changecolor(676388955985412116)
+    await changecolor(676389164727402517)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(673966918281199616).edit(colour = colour, reason = None)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(685813138301780027).edit(colour = colour, reason = None)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(676388955985412116).edit(colour = colour, reason = None)
+    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+    # await guild.get_role(676389164727402517).edit(colour = colour, reason = None)
     log('Цвета ролей обновлены.')
     await recover(ctx = ctx)
     log('Базы данных восстановлены.')
+    log('Бот готов к работе.')
 
 # @bot.event
 # async def on_reaction_add(reaction, user):
