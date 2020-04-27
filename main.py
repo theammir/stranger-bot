@@ -209,7 +209,7 @@ async def recover(ctx):
             await channel.send(rus[0])
             await channel.send(rus[1])
     async for i in assets.history(limit = 1000):
-        if not (i.content.startswith('ассет')):
+        if not (i.content.lower().startswith('ассет')):
             await i.delete()
         else:
             _key = i.content.split(' ')[1]
