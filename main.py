@@ -535,4 +535,4 @@ async def kickstart(ctx):
 
 log('Инициализированы все необходимые команды.')
 log('Бот подготавливается к запуску.')
-bot.run(BSTRANGER)
+bot.run(ASTRANGER)
