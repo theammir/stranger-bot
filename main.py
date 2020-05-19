@@ -3,11 +3,12 @@ from random import *
 from bs4 import BeautifulSoup as bs
 from tinydb import TinyDB, Query
 from colorama import Fore, Style
+from mutagen.mp3 import MP3
 import discord
 import asyncio
 import requests as rq
 import shutil
-# import maingame
+import os
 import colorama
 
 
@@ -22,6 +23,12 @@ def log(message, code = 'g'):
     g = 'g'
     r = 'r'
     print(f'[{Fore.GREEN}ASTRANGER{Style.RESET_ALL}] {message}'  if code == g else f'[{Fore.RED}ASTRANGER{Style.RESET_ALL}] {message}')
+
+def get_duration(file):
+    audio = MP3(file)
+    DURATION = audio.info.length
+    return DURATION
+
 log('Обьект бота инициализирован.')
 bot.remove_command('help')
 ASTRANGER = 'NjcwNjkyOTAwNTkzNTk4NTMw.Xn-nsA.w--gR1cpeD6wgY3zDNGVnGoOtXc'
@@ -32,6 +39,11 @@ tags = TinyDB('dbta.json')
 SUI = Query()
 _key = ''
 recovering = False
+SAY_CHANNEL = 712265525140652052
+voice_client = None
+
+FILES = list(filter(lambda i: i.startswith('t'), os.listdir()))
+
 def reset():
     if (db.search(SUI.key == '1') == []):
         db.insert({'_key' : '1', 'image' : 'a1.jpg', 'message' : ''}) # СУЙ
@@ -42,10 +54,13 @@ log('Основные догмы восстановлены.')
 
 @bot.event
 async def on_ready():
+    global voice_client
     channel = bot.get_channel(693112638275584260)
     message = await channel.fetch_message(693112703492816898)
     ctx = await bot.get_context(message)
+
     await bot.change_presence(activity = discord.Game(name='"асхелп"/"ashelp"'))
+
     guild = bot.get_guild(671432722236964884)
     def changecolor(id, guild = guild):
         role = guild.get_role(id)
@@ -56,15 +71,18 @@ async def on_ready():
     await changecolor(676388955985412116)
     await changecolor(676389164727402517)
     log('Цвета ролей обновлены.')
-    await recover(ctx = ctx)
+    #await recover(ctx = ctx)
     log('Базы данных восстановлены.')
+
+    voice_channel = bot.get_channel(SAY_CHANNEL)
+    voice_client  = await voice_channel.connect()
     log('Бот готов к работе.')
 
 
 @bot.event
 async def on_message(message):
     channel = message.channel
-    autor = str(message.author)
+    author = str(message.author)
     cantent = str(message.content)
     Killant = bot.get_user(472853149137240064)
     if (str(message.content).startswith('//')):
@@ -77,7 +95,7 @@ async def on_message(message):
         if (dmember in message.mentions):
             await channel.send(user['message'])
     if (str(message.content) == "СУЙ"):
-          if (autor[len(autor) - 4 : len(autor)] in ["8787", "6109"]):
+          if (author[len(author) - 4 : len(author)] in ["8787", "6109"]):
               async with channel.typing():
                   await channel.send(file = discord.File('a1.jpg'))
     elif (Killant in message.mentions):
@@ -87,7 +105,7 @@ async def on_message(message):
     elif (str(message.content) in ["цвет пакажы", 'gimmie the color']):
         while (1 == 1):
             await message.author.roles[len(message.author.roles) - 1].edit(colour = discord.Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), reason = None)
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
     elif (message.content.startswith(';')):
         cantent = cantent[1:]
         def evaluate(ctn):
@@ -96,9 +114,26 @@ async def on_message(message):
     elif (message.content in ('<@!672115782439927840>', '<@!670692900593598530>')):
         ctx = await bot.get_context(message)
         await ctx.send('**Есть, сэр!**')
-        if (autor != str(bot.get_user(343001477133893632))):
+        if (author != str(bot.get_user(343001477133893632))):
             await help(ctx)
     await bot.process_commands(message)
+
+
+@bot.event
+async def on_voice_state_update(member, before, after):
+    if (after.channel):
+        if (after.channel.id == 690138281928687622 and before.channel is None):
+            await asyncio.sleep(0.5)
+            audio = choice(FILES)
+            try:
+                voice_client.play(discord.FFmpegPCMAudio(audio))
+                voice_client.source = discord.PCMVolumeTransformer(voice_client.source)
+                voice_client.source.volume = 0.50
+            except Exception as e:
+                log(e, 'r')
+            DURATION = get_duration(audio)
+            await asyncio.sleep(DURATION)
+            await member.move_to(None)
 
 
 @bot.group(name = 'догма', aliases = ['dogma', 'dogme'])
@@ -151,6 +186,7 @@ async def astag(ctx, user: discord.Member, *, args):
 
 @bot.command(name = 'рекавер', aliases = ['recover', 'rcv'])
 async def recover(ctx):
+    global recovering
     eng = ['Recover 2.0\nStatus: START',
             'Dogmas recovering is started.',
             'Recover 2.0\nStatus: END',
@@ -161,10 +197,8 @@ async def recover(ctx):
             '~~Вирусная база данных успешно обновлена~~']
     db.purge()
     tags.purge()
-    reset()
     channel = ctx.message.channel
-    global recovering
-    autor = str(ctx.message.author)
+    author = str(ctx.message.author)
     roles = ''
     recovering = True
     for i in ctx.message.author.roles:
@@ -175,6 +209,7 @@ async def recover(ctx):
         return
     assets = bot.get_channel(685840409116540930)
     astags = bot.get_channel(692447840148127864)
+    reset()
     async with channel.typing():
         if (ctx.message.content.lower().startswith('as')):
             await channel.send(eng[0])
@@ -191,8 +226,13 @@ async def recover(ctx):
             await tset(ctx, _key, *content)
     async for i in astags.history(limit = 1000):
         user = i.content.split(' ')[1]
-        args = i.content.split(' ')[2:]
-        await astag(ctx, user = user, args = args)
+        if (bot.get_user(int(user))):
+            user = bot.get_user(int(user))
+            args = ' '.join(i.content.split(' ')[2:])
+            await astag(ctx, user = user, args = args)
+        else:
+            await i.delete()
+            await bot.get_channel(685553321901293605).send(f'Асте\г был удалён. ({user.id}) - ({args})')
     recovering = False
     async with channel.typing():
         if (ctx.message.content.lower().startswith('as')):

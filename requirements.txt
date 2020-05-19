@@ -4,3 +4,4 @@ tinydb==3.15.2
 requests==2.22.0
 beautifulsoup4==4.8.2
 colorama==0.4.3
+mutagen==1.44.0
