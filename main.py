@@ -71,7 +71,7 @@ async def on_ready():
     await changecolor(676388955985412116)
     await changecolor(676389164727402517)
     log('Цвета ролей обновлены.')
-    #await recover(ctx = ctx)
+    await recover(ctx = ctx)
     log('Базы данных восстановлены.')
 
     voice_channel = bot.get_channel(SAY_CHANNEL)
