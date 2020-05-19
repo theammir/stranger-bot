@@ -76,6 +76,7 @@ async def on_ready():
 
     voice_channel = bot.get_channel(SAY_CHANNEL)
     voice_client  = await voice_channel.connect()
+    log('Connected!')
     log('Бот готов к работе.')
 
 
@@ -121,19 +122,17 @@ async def on_message(message):
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    if (after.channel):
-        if (after.channel.id == 690138281928687622 and before.channel is None):
-            await asyncio.sleep(0.5)
-            audio = choice(FILES)
-            try:
+    if (member != bot.user):
+        if (after.channel):
+            if (after.channel.id == SAY_CHANNEL and before.channel is None):
+                await asyncio.sleep(0.5)
+                audio = choice(FILES)
                 voice_client.play(discord.FFmpegPCMAudio(audio))
                 voice_client.source = discord.PCMVolumeTransformer(voice_client.source)
                 voice_client.source.volume = 0.50
-            except Exception as e:
-                log(e, 'r')
-            DURATION = get_duration(audio)
-            await asyncio.sleep(DURATION)
-            await member.move_to(None)
+                DURATION = get_duration(audio)
+                await asyncio.sleep(DURATION)
+                await member.move_to(None)
 
 
 @bot.group(name = 'догма', aliases = ['dogma', 'dogme'])
