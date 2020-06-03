@@ -1,5 +1,8 @@
 import discord
+import os
+import asyncio
 from discord.ext import commands
+from utils import randomorg, functions
 
 class OtherCog(commands.Cog):
     def __init__(self, bot):
@@ -30,15 +33,17 @@ class OtherCog(commands.Cog):
             cantent = cantent[1:]
             def evaluate(ctn, _message = message):
                 _bot = self.bot
-                _ctx = await _bot.get_context(message)
                 return eval(ctn)
-            await channel.send(evaluate(cantent))
-
+            try:
+                await channel.send(evaluate(cantent))
+            except Exception as e:
+                functions.log(e, 'r', 'EVL')
         elif (message.content in ('<@!672115782439927840>', '<@!670692900593598530>')):
             ctx = await self.bot.get_context(message)
             await ctx.send('**Есть, сэр!**')
-            if (author != str(self.bot.get_user(343001477133893632))):
-                await help(ctx)
+            if (message.author != self.bot.get_user(343001477133893632)):
+                helpcog = self.bot.get_cog('HelpCommandCog')
+                await helpcog.help(ctx)
 
 
 def setup(bot):

@@ -1,6 +1,5 @@
 import requests as rq
 
-# if response.status_code is not ok
 import random
 
 def integer(*args):

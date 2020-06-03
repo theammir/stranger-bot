@@ -39,10 +39,7 @@ async def on_ready():
     for i in os.listdir():
         if ('.' not in i):
             if (i != 'utils' and i != 'Procfile'):
-                try:
-                    bot.load_extension(f'{i}.src.{i}')
-                except:
-                    pass
+                bot.load_extension(f'{i}.src.{i}')
                 length = functions.get_length(f"{i}/src/{i}.py")
                 functions.log(f'({length} lines) {i} был загружен.', 'm', 'COG')
                 sum += length
@@ -66,8 +63,9 @@ async def cog_load(ctx, cog):
         bot.load_extension(f'{cog}.src.{cog}')
     except commands.errors.ExtensionAlreadyLoaded:
         await ctx.send(f'`{cog.upper()} is already loaded.`', delete_after = 5.0)
+        return
     length = functions.get_length(f"{cog}/src/{cog}.py")
-    await ctx.send(f'`{cog.upper()} cog was loaded. ({length} lines)`')
+    await ctx.send(f'`{cog.upper()} cog was loaded. ({length} lines)`', delete_after = 5.0)
     functions.log(f'({length} lines) {cog} был загружен.', 'm', 'COG')
 
 @commands.is_owner()
