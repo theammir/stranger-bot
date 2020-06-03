@@ -51,7 +51,7 @@ async def on_ready():
     functions.log(f'Всего строк: {sum}.', 'm', 'LEN')
     print()
 
-    # await recover(ctx = ctx)
+    await recover(ctx = ctx)
     functions.log('Базы данных восстановлены.')
 
     functions.log('Бот готов к работе.')
