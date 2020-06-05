@@ -7,7 +7,6 @@ class ServerCog(commands.Cog):
 
     @commands.command(name = 'погости', aliases = ['guest'])
     async def guesting(ctx, person : discord.Member):
-
         rus = ['Вы не можете изменять роли самому себе.',
                 'Вы не имеете права на изменение ролей этого человека.']
         eng = ['You can\'t edit your own roles.',
@@ -23,15 +22,16 @@ class ServerCog(commands.Cog):
             return
         guild = self.bot.get_guild(person.guild.id)
         roles = ''
-        required_roles = ['обучатор', 'совет флота', 'адмирал', 'вице адмирал', 'доверенный']
+        required_roles = variables.REQUIRED
         for element in ctx.message.author.roles:
             roles += str(element)
         roles = roles.lower()
         for element in required_roles:
             if (element in roles):
-                await person.remove_roles(guild.get_role(686634008444141618), reason = None)
-                await person.remove_roles(guild.get_role(705497106273534034), reason = None)
-                await person.add_roles(guild.get_role(670719148699156511), reason = None)
+                if (variables.ADVANTURER):
+                    await person.remove_roles(guild.get_role(variables.ADVANTURER), reason = None)
+                await person.remove_roles(guild.get_role(variables.ENSIGN), reason = None)
+                await person.add_roles(guild.get_role(variables.GUEST), reason = None)
                 return
             else:
                 async with channel.typing():
@@ -59,18 +59,22 @@ class ServerCog(commands.Cog):
             return
         guild = person.guild
         roles = ''
+        required_roles = variables.REQUIRED
         for element in ctx.message.author.roles:
             roles += str(element)
-        if ('обучатор' not in roles):
-            async with channel.typing():
-                if (isrus):
-                    await channel.send(rus[1])
-                else:
-                    await channel.send(eng[1])
-        else:
+        roles = roles.lower()
+        for element in required_roles:
+            if (element not in roles):
+                async with channel.typing():
+                    if (isrus):
+                        await channel.send(rus[1])
+                    else:
+                        await channel.send(eng[1])
+                    return
+        if (variables.ADVANTURER):
             await person.remove_roles(guild.get_role(686634008444141618), reason = None)
-            await person.add_roles(guild.get_role(705497106273534034), reason = None)
-            await person.remove_roles(guild.get_role(670719148699156511), reason = None)
+        await person.add_roles(guild.get_role(variables.ENSIGN), reason = None)
+        await person.remove_roles(guild.get_role(variables.GUEST), reason = None)
 
 
 def setup(bot):

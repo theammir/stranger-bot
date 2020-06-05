@@ -31,11 +31,11 @@ class OtherCog(commands.Cog):
 
         elif (message.content.startswith(';')):
             cantent = cantent[1:]
-            def evaluate(ctn, _message = message):
+            async def evaluate(ctn, _message = message):
                 _bot = self.bot
                 return eval(ctn)
             try:
-                await channel.send(evaluate(cantent))
+                await channel.send(await evaluate(cantent))
             except Exception as e:
                 functions.log(e, 'r', 'EVL')
         elif (message.content in ('<@!672115782439927840>', '<@!670692900593598530>')):

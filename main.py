@@ -108,8 +108,8 @@ async def recover(ctx):
         pass
     else:
         return
-    assets = bot.get_channel(685840409116540930)
-    astags = bot.get_channel(692447840148127864)
+    assets = bot.get_channel(variables.DOGMAS_CHANNEL)
+    astags = bot.get_channel(variables.MENTIONS_CHANNEL)
     functions.reset(variables.db)
     async with channel.typing():
         if (ctx.message.content.lower().startswith('as')):

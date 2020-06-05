@@ -6,16 +6,15 @@ from utils import variables, functions, randomorg
 class VoiceCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.voice_client = variables.voice_client
+        self.voice_client = None
+        bot.loop.create_task(self.__ainit__())
+    async def __ainit__(self):
         self.voice_channel = self.bot.get_channel(variables.SAY_CHANNEL)
+        self.voice_client = await self.voice_channel.connect()
+        variables.voice_client = self.voice_client
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        try:
-            self.voice_channel = self.bot.get_channel(variables.SAY_CHANNEL)
-            self.voice_client = await voice_channel.connect()
-        except:
-            pass
         voice_client = self.voice_client
         if (member != self.bot.user):
             if (after.channel):

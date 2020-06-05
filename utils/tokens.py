@@ -5,4 +5,4 @@ with open('TOKENS.txt', 'r') as f:
     if (len(TOKENS_LIST) > 1):
         BSTRANGER = TOKENS_LIST[1]
         if (len(TOKENS_LIST) > 2):
-            BFTAE = TOKENS_LIST[2]
+            CSTRANGER = TOKENS_LIST[2]
