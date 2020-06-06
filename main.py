@@ -38,7 +38,7 @@ async def on_ready():
     sum = 0
     for i in os.listdir():
         if ('.' not in i):
-            if (i != 'utils' and i != 'Procfile'):
+            if (i not in ['Procfile', 'utils', 'LICENSE']):
                 bot.load_extension(f'{i}.src.{i}')
                 length = functions.get_length(f"{i}/src/{i}.py")
                 functions.log(f'({length} lines) {i} был загружен.', 'm', 'COG')
@@ -130,14 +130,13 @@ async def recover(ctx):
     async for i in astags.history(limit = 1000):
         user = i.content.split(' ')[1]
         if (bot.get_user(int(user))):
-            user = bot.get_user(int(user))
             args = ' '.join(i.content.split(' ')[2:])
-
+            user = bot.get_user(int(user))
             tags = bot.get_cog('TagsCog')
             await tags.astag(ctx, user = user, args = args)
         else:
             await i.delete()
-            await bot.get_channel(685553321901293605).send(f'Асте\г был удалён. ({user.id}) - ({args})')
+            await bot.get_channel(685553321901293605).send(f'Асте\г был удалён. ({user}) - ({args})')
     recovering = False
     async with channel.typing():
         if (ctx.message.content.lower().startswith('as')):
@@ -176,4 +175,4 @@ async def dbpurge(ctx):
 
 functions.log('Инициализированы все необходимые команды.')
 functions.log('Бот подготавливается к запуску.')
-bot.run(tokens.ASTRANGER)
+bot.run(tokens.BSTRANGER)

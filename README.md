@@ -1,7 +1,7 @@
 <div align='center'>
     <img src="https://cdn.discordapp.com/attachments/685553321901293605/718140139632853083/e5982ce2900da24da3e4ac7c7fafc117.jpg" alt="Logo" width="100" height="100">
     <h1>Stranger Bot for Discord</h1>
-    <h6>This bot is closely linked with Russian <a href='https://pixelstarships.com/'>Pixel Starships</a> Community</h6>
+    <h6>This bot is closely linked with Russian <a href='https://www.pixelstarships.com/'>Pixel Starships</a> Community</h6>
     <h6><a href='https://discord.gg/A4NETzF'>Join our Discord Server (🇷🇺)</a></h6>
 </div>
 
@@ -12,7 +12,7 @@ ___
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 * ### Features
-    * __Fleet Dogmas__ - type `asdogma motto` to see an example. Can cointan images.
+    * __Fleet Dogmas__ - type `asdogma a motto` to see an example. Can cointan images.
     * __Dogmas setting__ - type `asset <name> <image link (optional)> <text (optional)>` to set your own dogma.
     * __Dogmas list__ - type `aslist` and click on the reaction to see the list of all dogmas.
     * __Mention messages__ - type `astag <@mention> <text>` and try to mention the user.
