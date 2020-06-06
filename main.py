@@ -175,4 +175,4 @@ async def dbpurge(ctx):
 
 functions.log('Инициализированы все необходимые команды.')
 functions.log('Бот подготавливается к запуску.')
-bot.run(tokens.BSTRANGER)
+bot.run(tokens.ASTRANGER)
